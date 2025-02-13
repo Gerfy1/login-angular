@@ -68,6 +68,7 @@ main {
       border: none;
       background: transparent;
       padding: 12px 24px;
+      cursor: pointer;
 
       &.btn-primary{
         background-color: $primar-color;
