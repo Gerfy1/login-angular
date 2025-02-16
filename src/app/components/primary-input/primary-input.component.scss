@@ -5,12 +5,20 @@
     font-size: 16px;
     text-align: start;
 
+    .input-content{
+        width: 100%;
+        border-radius: 8px;
+
+        .icon{
+            padding: 12px;
+            background-color: $primar-color;
+        }
+    }
     
     input{
         border: none;
-        border-radius: 8px;
+ 
         background-color: $gray-secondary-bg;
-    
         padding: 12px 0 12px 20px;
         width: 100%;
     }
