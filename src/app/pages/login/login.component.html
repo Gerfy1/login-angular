@@ -4,8 +4,12 @@
   secondaryBtnText="Singup Now"
 >
   <form [formGroup]="loginForm">
-    <app-primary-input>
-      <img src="/src/assets/Frame-Mail.svg"/>
+    <app-primary-input
+    formName="email"
+    type="email"
+    label="email"
+    placeholder="user@gmail.com">
+      <img src="src\assets\Frame-Mail.svg">
     </app-primary-input>
   </form>
 </app-default-login-layout>
