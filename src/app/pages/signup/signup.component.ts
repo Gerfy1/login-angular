@@ -7,7 +7,7 @@ import { LoginService } from '../../services/login.service';
 import { ToastrService } from 'ngx-toastr';
 
 @Component({
-  selector: 'app-login',
+  selector: 'app-signup',
   imports: [
     DefaultLoginLayoutComponent,
     ReactiveFormsModule,
@@ -19,7 +19,7 @@ import { ToastrService } from 'ngx-toastr';
   templateUrl: './signup.component.html',
   styleUrl: './signup.component.scss'
 })
-export class LoginComponent {
+export class SignupComponent {
 
   signupForm!: FormGroup;
   constructor(private router:Router, private loginService: LoginService, private toastService: ToastrService){
