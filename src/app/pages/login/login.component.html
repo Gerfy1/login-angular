@@ -4,6 +4,7 @@
   secondaryBtnText="Singup Now"
   (submite)="submit()"
   (navigate)="navigate()"
+  [disablePrimarybtn]="!loginForm.valid"
 >
     <form [formGroup]="loginForm">
       <app-primary-input
