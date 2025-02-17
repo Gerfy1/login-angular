@@ -3,21 +3,21 @@
   primaryBtnText="Login Now"
   secondaryBtnText="Singup Now"
 >
-  <form [formGroup]="loginForm">
-    <app-primary-input
-    formControlName="email"
-    inputName="email"
-    type="email"
-    label="E-mail"
-    placeholder="user@gmail.com">
-    <img src="../../../assets/Frame-Mail.svg">
+    <form [formGroup]="loginForm">
+      <app-primary-input
+          formControlName="email"
+          inputName="email"
+          type="email"
+          label="E-mail"
+          placeholder="user@gmail.com">
+          <img src="/public/assets/Frame-Mail.svg">
+      </app-primary-input>
+      <app-primary-input
+          formControlName="password"
+          inputName="password"
+          type="password"
+          label="Your Password">
+        <img src="/src/assets/Frame-Lock.svg">
     </app-primary-input>
-    <app-primary-input
-    formControlName="password"
-    inputName="password"
-    type="password"
-    label="Your Password">
-    <img src="/src/assets/Frame-Lock.svg">
-    </app-primary-input>
-  </form>
+    </form>
 </app-default-login-layout>
