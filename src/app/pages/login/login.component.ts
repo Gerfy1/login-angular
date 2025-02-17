@@ -30,6 +30,6 @@ export class LoginComponent {
   }
 
   navigate(){
-    console.log(this.loginForm.value)
+    this.router.navigate(["/signup"])
   }
 }
