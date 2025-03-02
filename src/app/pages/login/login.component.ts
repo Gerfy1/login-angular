@@ -31,7 +31,10 @@ export class LoginComponent {
 
   submit() {
     this.loginService.login(this.loginForm.value.username, this.loginForm.value.password).subscribe({
-      next: () => this.toastService.success("Login feito com sucesso!"),
+      next: () => {
+        this.toastService.success("Login feito com sucesso!");
+        this.router.navigate(['/dashboard']);
+      },
       error: (err) => {
         if (err.status === 400) {
           this.toastService.error("Usuário ou senha inválidos");

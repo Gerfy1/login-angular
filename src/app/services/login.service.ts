@@ -12,9 +12,11 @@ import { Router } from '@angular/router';
 })
 export class LoginService {
 
+
+
   private baseUrl = "http://localhost:81/api/auth"
 
-  constructor(private httpClient: HttpClient) { }
+  constructor(private httpClient: HttpClient, private router: Router) { }
 
   login(username: string, password: string){
     console.log('Login data:', { username, password });

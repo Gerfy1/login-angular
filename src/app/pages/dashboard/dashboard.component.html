@@ -1,13 +1,10 @@
-<div class="dashboard-container">
-  <aside class="sidebar">
-    <nav>
-      <ul>
-        <li><a routerLink = "applications"> Job Applications</a></li>
-        <li><a routerLink = "profile"> Profile</a></li>
-      </ul>
-    </nav>
-  </aside>
-  <main class="main-content">
-    <router-outlet></router-outlet>
-  </main>
+<div class="dashboard-container d-flex">
+  <app-sidebar></app-sidebar>
+  <div class="main-content flex-grow-1 d-flex flex-column">
+    <app-header></app-header>
+    <div class="content flex-grow-1 d-flex">
+      <app-jobs class="flex-grow-1"></app-jobs>
+      <router-outlet></router-outlet>
+    </div>
+  </div>
 </div>
