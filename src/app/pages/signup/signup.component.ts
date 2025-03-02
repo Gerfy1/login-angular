@@ -24,21 +24,33 @@ export class SignupComponent {
   signupForm!: FormGroup;
   constructor(private router:Router, private loginService: LoginService, private toastService: ToastrService){
     this.signupForm = new FormGroup({
-      nome: new FormControl('', [Validators.required, Validators.minLength(3)]),
-      email: new FormControl('',[Validators.required, Validators.email]),
-      password: new FormControl('', [Validators.required, Validators.minLength(6)]),
-      passwordConfirm: new FormControl('', [Validators.required, Validators.minLength(6)])
+      username: new FormControl('', [Validators.required, Validators.minLength(3)]),
+      password: new FormControl('', [Validators.required, Validators.minLength(6)])
     })
   }
 
-  submit(){
-    this.loginService.login(this.signupForm.value.email, this.signupForm.value.password).subscribe({
-      next: () => this.toastService.success("Login feito com sucesso!"),
-      error: () => this.toastService.error("Erro ao logar, tente novamente!")
-    })
+  submit() {
+    this.loginService.register(this.signupForm.value.username, this.signupForm.value.password).subscribe({
+      next: (response) => {
+        if (response.status === 201) {
+          if (response.body && (response.body as any).message) {
+            this.toastService.success((response.body as any).message);
+            this.signupForm.reset();
+            this.router.navigate(["/login"]);
+          }
+        }
+      },
+      error: (err) => {
+        if (err.status === 400) {
+          this.toastService.error(err.error.message);
+        } else {
+          this.toastService.error("Erro ao registrar, tente novamente!");
+        }
+      }
+    });
   }
 
   navigate(){
-    this.router.navigate(["login"])
+    this.router.navigate(["/login"])
   }
 }

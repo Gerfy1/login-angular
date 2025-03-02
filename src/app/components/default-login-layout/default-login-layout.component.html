@@ -1,21 +1,21 @@
 <main>
   <section class="forms-section">
-        <img src="assets/logo.svg">
+        <img src="assets/Logo2.svg">
       <h2>{{title}}</h2>
       <ng-content></ng-content>
-      <div class="btn-wrapper">
-        <button class="btn-primary"(click)="submit()" [disabled]="disablePrimarybtn" >{{ primaryBtnText }}</button>
+      <div class="btn-wrapper app-default-login-layout ">
+        <button class="btn-primary"(click)="onSubmit()" [disabled]="disablePrimarybtn" >{{ primaryBtnText }}</button>
         <div class="divider">
           <div></div>
           <span>or</span>
           <div></div>
         </div>
-        <button class="btn-secondary" (click)="navigate()">{{ secondaryBtnText }}</button>
+        <button class="btn-secondary" (click)="onNavigate()">{{ secondaryBtnText }}</button>
       </div>
   </section>
 
   <section class="main-section">
-    <h1>You Should, Move Move! </h1>
-    <img src="assets/main-illu.svg">
+    <h1>Keep Moving Forward! </h1>
+    <img src="assets/Web2.svg">
   </section>
 </main>
