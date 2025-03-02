@@ -4,6 +4,8 @@ import { LoginResponse } from '../types/login-response.type';
 import { tap } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { throwError } from 'rxjs';
+import { Router } from '@angular/router';
+
 
 @Injectable({
   providedIn: 'root'
@@ -21,6 +23,7 @@ export class LoginService {
         console.log('Login response:', value);
         sessionStorage.setItem("auth-token", value.token);
         sessionStorage.setItem("username", value.username);
+        this.router.navigate(['/dashboard']);
       }),
       catchError((error) => {
         console.error('Login error:', error);
