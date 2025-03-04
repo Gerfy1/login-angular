@@ -3,8 +3,18 @@
     margin-bottom: 20px;
   }
 
-  #calendar{
-    height: 400px;
+.small-calendar{
+  mwl-calendar-month-view {
+    height: 100px;
+    .cal-header{
+      font-size: 0.8rem;
+    }
+    .cal-cell-top{
+      font-size: 0.7rem;
+    }
+    .cal-events{
+      font-size: 0.7rem;
+    }
+   }
   }
-
 }
