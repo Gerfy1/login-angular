@@ -1,0 +1,11 @@
+<div class="notification-list" >
+  <div class="header">
+    <h4>Notificações</h4>
+    <button (click)="clearNotifications()">Limpar</button>
+  </div>
+  <ul>
+    <li *ngFor = "let notification of notifications" >
+      {{notification}}
+    </li>
+  </ul>
+</div>

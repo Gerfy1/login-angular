@@ -4,11 +4,12 @@ import { CalendarEvent, CalendarEventTimesChangedEvent, CalendarModule } from 'a
 import { isSameDay } from 'date-fns';
 import { Subject } from 'rxjs';
 import { StatisticsComponent } from '../../components/statistics/statistics.component';
-
+import { NotificationService } from '../../services/notification.service';
+import { NotificationListComponent } from '../../components/notification-list/notification-list.component';
 
 @Component({
   selector: 'app-dashboard-home',
-  imports: [ CommonModule, CalendarModule, StatisticsComponent ],
+  imports: [ CommonModule, CalendarModule, StatisticsComponent],
   templateUrl: './dashboard-home.component.html',
   styleUrl: './dashboard-home.component.scss'
 })
@@ -16,8 +17,12 @@ export class DashboardHomeComponent implements OnInit {
 
   refresh: Subject<any> = new Subject();
 
+  constructor(private notificationService: NotificationService) {}
+
+
   ngOnInit() {
     this.activeDayIsOpen = false;
+    this.notificationService.addNotification('Welcome to the dashboard!');
   }
 
   activeDayIsOpen: boolean = false;
@@ -56,10 +61,12 @@ export class DashboardHomeComponent implements OnInit {
     event.start = newStart;
     event.end = newEnd;
     this.refresh.next(null);
+    this.notificationService.addNotification('Evento atualizado!');
   }
 
   handleEvent(action: string, event: CalendarEvent): void {
     console.log(action, event);
+    this.notificationService.addNotification(`Evento ${action}!`);
   }
 }
 

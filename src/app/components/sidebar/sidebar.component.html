@@ -29,8 +29,13 @@
         <i class="bi bi-person fs-4"></i>
       </a>
     </li>
+    <div class="notification-icon">
+      <i class="bi bi-bell" (click)="toggleNotifications()"></i>
+      <div class="notification-list-container" *ngIf="showNotifications">
+        <app-notification-list></app-notification-list>
+      </div>
+    </div>
   </ul>
-
   <div class="dropdown">
     <a href="#" class="d-block p-3" data-bs-toggle="dropdown" aria-expanded="false">
       <img src="https://cdn-icons-png.flaticon.com/512/147/147142.png" alt="Avatar" class="rounded-circle" width="40" height="40">

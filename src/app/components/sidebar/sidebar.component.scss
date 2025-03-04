@@ -3,6 +3,27 @@
   padding: 15px 0;
 }
 
+.notification-icon {
+  position: relative;
+  font-size: 24px;
+  cursor: pointer;
+  color: #007bff;
+  margin-bottom: 20px;
+
+  .notification-list-container {
+    position: absolute;
+    top: 0;
+    left: 100%;
+    transform: translateX(10px);
+    z-index: 1100;
+    background-color: white;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    border: 1px solid #ccc;
+    width: 300px;
+  }
+}
+
+
 .nav-link:not(:last-child) {
   border-bottom: 1px solid #ddd;
 }
