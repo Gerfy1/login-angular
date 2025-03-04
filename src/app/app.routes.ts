@@ -18,11 +18,14 @@ export const routes: Routes = [{
 },
 { path: 'dashboard', component: DashboardComponent, children: [
   { path: '', component: DashboardHomeComponent},
+  { path: 'job-applications', component: JobAplicationListComponent },
   { path: 'applications', component: JobAplicationListComponent },
   { path: 'applications/new', component: JobApplicationFormComponent },
   { path: 'applications/:id', component: JobApplicationFormComponent },
   { path: 'profile', component: ProfileComponent },
 ]},
+{ path: 'job-applications', component: JobApplicationFormComponent }, // Adicione esta linha para permitir acesso direto
+
 {
   path: '', redirectTo: '/login', pathMatch: 'full'
 },
