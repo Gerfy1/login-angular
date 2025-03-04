@@ -7,6 +7,7 @@ import { JobApplicationFormComponent } from './components/job-application-form/j
 import { ProfileComponent } from './components/profile/profile.component';
 import { NgModule } from '@angular/core';
 import { DashboardHomeComponent } from './pages/dashboard-home/dashboard-home.component';
+import { JobApplicationsPageComponent } from './pages/job-applications-page/job-applications-page.component';
 
 export const routes: Routes = [{
   path: "login",
@@ -24,7 +25,7 @@ export const routes: Routes = [{
   { path: 'applications/:id', component: JobApplicationFormComponent },
   { path: 'profile', component: ProfileComponent },
 ]},
-{ path: 'job-applications', component: JobApplicationFormComponent }, // Adicione esta linha para permitir acesso direto
+{ path: 'job-applications', component: JobApplicationsPageComponent }, // Adicione esta linha para permitir acesso direto
 
 {
   path: '', redirectTo: '/login', pathMatch: 'full'
