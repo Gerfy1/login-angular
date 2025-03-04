@@ -10,6 +10,7 @@ import { CalendarModule } from 'angular-calendar';
 import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
+import { ToastrModule } from 'ngx-toastr';
 
 if (environment.production){
   enableProdMode();
@@ -21,7 +22,8 @@ bootstrapApplication(AppComponent, {
     provideCharts(withDefaultRegisterables()),
     provideAnimations(),
     importProvidersFrom(
-      CalendarModule.forRoot({ provide: DateAdapter, useFactory: adapterFactory })
+      CalendarModule.forRoot({ provide: DateAdapter, useFactory: adapterFactory }),
+      ToastrModule.forRoot()
     )
   ]
 }).catch((err) => console.error(err));

@@ -1,6 +1,11 @@
 .dashboard-home {
   .card{
     margin-bottom: 20px;
+    position: relative;
+    z-index: -1;
+  }
+  .row{
+    z-index: -1;
   }
 
 .small-calendar{
