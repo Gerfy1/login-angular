@@ -3,11 +3,12 @@ import { Component, OnInit } from '@angular/core';
 import { CalendarEvent, CalendarEventTimesChangedEvent, CalendarModule } from 'angular-calendar';
 import { isSameDay } from 'date-fns';
 import { Subject } from 'rxjs';
+import { StatisticsComponent } from '../../components/statistics/statistics.component';
 
 
 @Component({
   selector: 'app-dashboard-home',
-  imports: [ CommonModule, CalendarModule ],
+  imports: [ CommonModule, CalendarModule, StatisticsComponent ],
   templateUrl: './dashboard-home.component.html',
   styleUrl: './dashboard-home.component.scss'
 })

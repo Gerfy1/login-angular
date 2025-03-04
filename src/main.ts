@@ -9,6 +9,7 @@ import { routes } from './app/app.routes';
 import { CalendarModule } from 'angular-calendar';
 import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
 import { provideAnimations } from '@angular/platform-browser/animations';
+import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
 
 if (environment.production){
   enableProdMode();
@@ -17,6 +18,7 @@ if (environment.production){
 bootstrapApplication(AppComponent, {
   providers: [
     provideRouter(routes),
+    provideCharts(withDefaultRegisterables()),
     provideAnimations(),
     importProvidersFrom(
       CalendarModule.forRoot({ provide: DateAdapter, useFactory: adapterFactory })

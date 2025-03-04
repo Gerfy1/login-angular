@@ -1,0 +1,23 @@
+.statistics {
+  .card {
+    margin-bottom: 20px;
+  }
+
+  .chart-container {
+    position: relative;
+    width: 100%;
+  }
+
+  .pie-chart-container {
+    height: 250px;
+  }
+
+  .bar-chart-container {
+    height: 400px;
+  }
+
+  .baseChart {
+    height: 100% !important;
+    width: 100% !important;
+  }
+}

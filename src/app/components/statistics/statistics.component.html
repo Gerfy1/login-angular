@@ -1,0 +1,41 @@
+<div class="statistics">
+  <div class="row">
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-header">
+          Status das Candidaturas
+        </div>
+        <div class="card-body">
+          <div class="chart-container pie-chart-container">
+          <canvas class="baseChart"
+            baseChart
+            [data]="pieChartData"
+            [options]="pieChartOptions"
+            [type]="pieChartType"
+            [legend]="pieChartLegend"
+            [plugins]="pieChartPlugins">
+
+          </canvas>
+        </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-header">
+          Candidaturas por Mês
+        </div>
+        <div class="card-body">
+          <canvas class="baseChart"
+            baseChart
+            [data]="barChartData"
+            [options]="barChartOptions"
+            [type]="barChartType"
+            [legend]="barChartLegend"
+            [plugins]="barChartPlugins">
+          </canvas>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
