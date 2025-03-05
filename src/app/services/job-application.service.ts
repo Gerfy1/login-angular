@@ -1,10 +1,16 @@
 import { Injectable } from "@angular/core";
+import { HttpClient } from "@angular/common/http";
+import { Observable } from "rxjs";
+import { JobApplication } from "../types/job-application.type";
 
 @Injectable({
   providedIn: 'root'
 })
 
 export class JobApplicationService {
+
+  private apiUrl = 'http://localhost:8081/job-applications';
+
   private jobApplications: any[] = [];
 
   constructor(){}
