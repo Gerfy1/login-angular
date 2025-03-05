@@ -11,7 +11,7 @@ import { ToastrService } from 'ngx-toastr';
   imports: [
     DefaultLoginLayoutComponent,
     ReactiveFormsModule,
-    PrimaryInputComponent
+    PrimaryInputComponent,
   ],
   providers: [
     LoginService

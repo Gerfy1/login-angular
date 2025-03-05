@@ -11,6 +11,9 @@ import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
 import { ToastrModule } from 'ngx-toastr';
+import { HttpClient, HttpClientModule } from '@angular/common/http'; // Adicione esta linha
+import { ReactiveFormsModule } from '@angular/forms'; // Adicione esta linha
+
 
 if (environment.production){
   enableProdMode();
@@ -23,7 +26,9 @@ bootstrapApplication(AppComponent, {
     provideAnimations(),
     importProvidersFrom(
       CalendarModule.forRoot({ provide: DateAdapter, useFactory: adapterFactory }),
-      ToastrModule.forRoot()
+      ToastrModule.forRoot(),
+      HttpClientModule,
+      HttpClient
     )
   ]
 }).catch((err) => console.error(err));

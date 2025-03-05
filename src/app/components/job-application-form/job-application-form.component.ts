@@ -6,6 +6,7 @@ import { DatePipe } from '@angular/common';
 import { CommonModule } from '@angular/common';
 import { JobApplication } from '../../models/job-application.model';
 import { Observable } from 'rxjs';
+import { User } from '../../models/user.model';
 
 @Component({
   selector: 'app-job-application-form',
@@ -43,16 +44,38 @@ export class JobApplicationFormComponent implements OnInit {
   }
 
   onSubmit(): void {
-    if(this.jobApplicationForm.valid){
+    console.log('Form submitted');
+    const user: User = { id: 1, username: 'Gerfydev' };
+    if (this.jobApplicationForm.valid) {
       const newApplication: JobApplication = {
         ...this.jobApplicationForm.value,
-        date: new Date()
-    };
-    this.jobApplicationService.addJobApplication(newApplication).subscribe(() => {
-      this.jobApplicationForm.reset({ status: 'Pendente' });
-      this.loadJobApplications();
+        date: new Date(),
+        user: user
+      };
+      console.log('New application:', newApplication);
+      this.jobApplicationService.addJobApplication(newApplication).subscribe(
+        (response) => {
+          console.log('Job application created successfully', response);
+          this.jobApplicationForm.reset({ status: 'Pendente' });
+          this.loadJobApplications();
+        },
+        (error) => {
+          console.error('Error creating job application', error);
+        }
+      );
+    } else {
+      console.log('Form is invalid');
+      this.logFormErrors();
+    }
+  }
+
+  logFormErrors(): void {
+    Object.keys(this.jobApplicationForm.controls).forEach(key => {
+      const controlErrors = this.jobApplicationForm.get(key)?.errors;
+      if (controlErrors != null) {
+        console.log(`Key: ${key}, Errors:`, controlErrors);
+      }
     });
-   }
   }
 
   filterApplications(): void {
