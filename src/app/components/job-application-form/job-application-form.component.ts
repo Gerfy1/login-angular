@@ -17,8 +17,7 @@ import { User } from '../../models/user.model';
 export class JobApplicationFormComponent implements OnInit {
 
   jobApplicationForm: FormGroup;
-  jobApplications: JobApplication []= [];
-  filterText: string = '';
+
 
   constructor( private fb: FormBuilder, private jobApplicationService: JobApplicationService) {
     this.jobApplicationForm = this.fb.group({
@@ -34,14 +33,9 @@ export class JobApplicationFormComponent implements OnInit {
 
 
   ngOnInit(): void{
-    this.loadJobApplications();
+
   }
 
-  loadJobApplications(): void {
-    this.jobApplicationService.getJobApplications().subscribe((applications) => {
-      this.jobApplications = applications;
-    });
-  }
 
   onSubmit(): void {
     console.log('Form submitted');
@@ -60,7 +54,6 @@ export class JobApplicationFormComponent implements OnInit {
           (response) => {
             console.log('Job application created successfully', response);
             this.jobApplicationForm.reset({ status: 'Pendente' });
-            this.loadJobApplications();
           },
           (error) => {
             console.error('Error creating job application', error);
@@ -82,28 +75,6 @@ export class JobApplicationFormComponent implements OnInit {
         console.log(`Key: ${key}, Errors:`, controlErrors);
       }
     });
-  }
-
-  filterApplications(): void {
-    this.jobApplicationService.getJobApplications().subscribe((applications) => {
-      this.jobApplications = applications.filter(application =>
-        application.jobName.toLowerCase().includes(this.filterText.toLocaleLowerCase()) || application.jobDescription.toLowerCase().includes(this.filterText.toLowerCase())
-      );
-    });
-  }
-
-  updateStatus(application: JobApplication, status: string): void {
-    if (application.id !== undefined) {
-      this.jobApplicationService.updateJobApplicationStatus(application.id, status).subscribe(() => {
-        this.loadJobApplications();
-      });
-    } else {
-      console.error('Application ID is undefined');
-    }
-  }
-
-  addReminder(application: JobApplication): void {
-    //  next
   }
 
 }

@@ -8,6 +8,18 @@ import { throwError } from 'rxjs';
 import { Router } from '@angular/router';
 
 
+interface TokenWithAccessToken {
+  accessToken: string;
+}
+
+interface TokenWithToken {
+  token: string;
+}
+
+interface TokenWithJwt {
+  jwt: string;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -22,9 +34,31 @@ export class LoginService {
   login(username: string, password: string){
     return this.httpClient.post<LoginResponse>(`${this.baseUrl}/login`, { username, password }).pipe(
       tap((value) => {
-        sessionStorage.setItem("auth-token", value.token);
+        console.log('Login response:', value);
+        console.log('Token type:', typeof value.token);
+
+        if (typeof value.token === 'object' && value.token !== null) {
+          const tokenObj = value.token as any; // Use any para evitar erros de tipo
+
+          if ('accessToken' in tokenObj) {
+            sessionStorage.setItem("auth-token", tokenObj.accessToken);
+          } else if ('token' in tokenObj) {
+            sessionStorage.setItem("auth-token", tokenObj.token);
+          } else if ('jwt' in tokenObj) {
+            sessionStorage.setItem("auth-token", tokenObj.jwt);
+          } else {
+            sessionStorage.setItem("auth-token", JSON.stringify(tokenObj));
+          }
+        } else {
+          sessionStorage.setItem("auth-token", value.token as string);
+        }
+
         sessionStorage.setItem("user-id", value.userId.toString());
         sessionStorage.setItem("username", value.username);
+
+        const storedToken = sessionStorage.getItem("auth-token");
+        console.log('Stored token:', storedToken);
+
         this.router.navigate(['/dashboard']);
       }),
       catchError((error) => {

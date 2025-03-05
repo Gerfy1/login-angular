@@ -11,8 +11,9 @@ import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
 import { ToastrModule } from 'ngx-toastr';
-import { HttpClient, HttpClientModule } from '@angular/common/http'; // Adicione esta linha
-import { ReactiveFormsModule } from '@angular/forms'; // Adicione esta linha
+import { HttpClient, HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { AuthInterceptor } from './app/interceptors/auth.interceptor';
 
 
 if (environment.production){
@@ -28,7 +29,10 @@ bootstrapApplication(AppComponent, {
       CalendarModule.forRoot({ provide: DateAdapter, useFactory: adapterFactory }),
       ToastrModule.forRoot(),
       HttpClientModule,
-      HttpClient
-    )
+      HttpClient,
+      ReactiveFormsModule,
+      FormsModule
+    ),
+    {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true}
   ]
 }).catch((err) => console.error(err));

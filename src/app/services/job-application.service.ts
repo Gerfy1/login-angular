@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { HttpClient } from "@angular/common/http";
+import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { Observable } from "rxjs";
 import { JobApplication } from "../models/job-application.model";
 
@@ -14,24 +14,46 @@ export class JobApplicationService {
 
   constructor(private http: HttpClient){}
 
-  getJobApplications(): Observable<JobApplication[]>{
-    return this.http.get<JobApplication[]>(this.apiUrl);
+  private getAuthHeaders(): HttpHeaders {
+    const token = sessionStorage.getItem('auth-token');
+    console.log('Raw token from session:', token);
+
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    });
+
+    console.log('Using token for Authorization:', token);
+    console.log('Headers created:', headers);
+    return headers;
   }
 
- getJobApplicationById(id: number): Observable<JobApplication> {
-    return this.http.get<JobApplication>(`${this.apiUrl}/${id}`);
+  getJobApplications(): Observable<JobApplication[]> {
+    console.log('Fetching job applications from:', this.apiUrl);
+    const headers = this.getAuthHeaders();
+    console.log('Headers:', headers);
+    return this.http.get<JobApplication[]>(this.apiUrl, { headers });
+  }
+
+  getJobApplicationById(id: number): Observable<JobApplication> {
+    const headers = this.getAuthHeaders();
+    return this.http.get<JobApplication>(`${this.apiUrl}/${id}`, { headers });
   }
 
   addJobApplication(jobApplication: JobApplication): Observable<JobApplication> {
-    return this.http.post<JobApplication>(this.apiUrl, jobApplication);
+    const headers = this.getAuthHeaders();
+    console.log('Adding job application:', jobApplication);
+    console.log('Headers:', headers);
+    return this.http.post<JobApplication>(this.apiUrl, jobApplication, { headers });
   }
 
-  updateJobApplicationStatus(id: number, status: string): Observable<JobApplication> {
-    return this.http.put<JobApplication>(`${this.apiUrl}/${id}/status`, null , {params: {status}});
+  updateJobApplicationStatus(id: number, status: string): Observable<void> {
+    const headers = this.getAuthHeaders();
+    return this.http.put<void>(`${this.apiUrl}/${id}/status`, { status }, { headers });
   }
 
-  deleteJobApplication(id: number): Observable<void>{
-    return this.http.delete<void>(`${this.apiUrl}/${id}`);
+  deleteJobApplication(id: number): Observable<void> {
+    const headers = this.getAuthHeaders();
+    return this.http.delete<void>(`${this.apiUrl}/${id}`, { headers });
   }
-
 }
