@@ -20,16 +20,14 @@ export class LoginService {
   constructor(private httpClient: HttpClient, private router: Router) { }
 
   login(username: string, password: string){
-    console.log('Login data:', { username, password });
     return this.httpClient.post<LoginResponse>(`${this.baseUrl}/login`, { username, password }).pipe(
       tap((value) => {
-        console.log('Login response:', value);
         sessionStorage.setItem("auth-token", value.token);
+        sessionStorage.setItem("user-id", value.userId.toString());
         sessionStorage.setItem("username", value.username);
         this.router.navigate(['/dashboard']);
       }),
       catchError((error) => {
-        console.error('Login error:', error);
         return throwError(error);
       })
     );

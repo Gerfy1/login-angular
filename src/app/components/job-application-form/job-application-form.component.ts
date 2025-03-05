@@ -45,27 +45,33 @@ export class JobApplicationFormComponent implements OnInit {
 
   onSubmit(): void {
     console.log('Form submitted');
-    const user: User = { id: 1, username: 'Gerfydev' };
-    if (this.jobApplicationForm.valid) {
-      const newApplication: JobApplication = {
-        ...this.jobApplicationForm.value,
-        date: new Date(),
-        user: user
-      };
-      console.log('New application:', newApplication);
-      this.jobApplicationService.addJobApplication(newApplication).subscribe(
-        (response) => {
-          console.log('Job application created successfully', response);
-          this.jobApplicationForm.reset({ status: 'Pendente' });
-          this.loadJobApplications();
-        },
-        (error) => {
-          console.error('Error creating job application', error);
-        }
-      );
+    const userId = sessionStorage.getItem('user-id');
+    const username = sessionStorage.getItem('username');
+    if (userId && username) {
+      const user: User = { id: parseInt(userId, 10), username: username };
+      if (this.jobApplicationForm.valid) {
+        const newApplication: JobApplication = {
+          ...this.jobApplicationForm.value,
+          date: new Date(),
+          user: user
+        };
+        console.log('New application:', newApplication);
+        this.jobApplicationService.addJobApplication(newApplication).subscribe(
+          (response) => {
+            console.log('Job application created successfully', response);
+            this.jobApplicationForm.reset({ status: 'Pendente' });
+            this.loadJobApplications();
+          },
+          (error) => {
+            console.error('Error creating job application', error);
+          }
+        );
+      } else {
+        console.log('Form is invalid');
+        this.logFormErrors();
+      }
     } else {
-      console.log('Form is invalid');
-      this.logFormErrors();
+      console.error('User ID or username is missing');
     }
   }
 

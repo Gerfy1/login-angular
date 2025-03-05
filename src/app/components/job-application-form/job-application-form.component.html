@@ -7,7 +7,7 @@
     </div>
     <div class="mb-3">
       <label for="jobDescription" class="form-label">Empresa/Descrição</label>
-      <input type="text" id="jobDescription" class="form-control" formControlName="jobDescription " placeholder="Empresa ou a descrição da vaga">
+      <input type="text" id="jobDescription" class="form-control" formControlName="jobDescription" placeholder="Empresa ou a descrição da vaga">
     </div>
     <div class="mb-3">
       <label for="jobLink" class="form-label"> Link da Vaga </label>
@@ -28,7 +28,7 @@
     </div>
     <div class="mb-3 form-check">
       <input type="checkbox" id="reminder" formControlName="reminder" class="form-check-input">
-      <label for="reminder" class="form-check-label">Adicionar Lembrete</label>
+      <label for="reminder" class="form-check-label">Adicionar Lembrete?</label>
     </div>
     <div class="mb-3" *ngIf="jobApplicationForm.get('reminder')?.value">
       <label for="reminderDescription" class="form-label">Descrição do Lembrete</label>
@@ -50,7 +50,7 @@
           <h5>{{ application.jobName}} </h5>
           <p>{{ application.jobName}}</p>
           <p>{{ application.date | date }}</p>
-          <p>Status {{ application.status}}</p>
+          <p>Status:  {{ application.status}}</p>
         </div>
         <div>
           <button class="btn btn-secondary btn-sm" (click)="updateStatus(application, 'Pendente')">Pendente</button>
