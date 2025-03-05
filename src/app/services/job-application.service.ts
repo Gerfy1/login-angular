@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { Observable } from "rxjs";
-import { JobApplication } from "../types/job-application.type";
+import { JobApplication } from "../models/job-application.model";
 
 @Injectable({
   providedIn: 'root'
@@ -11,31 +11,27 @@ export class JobApplicationService {
 
   private apiUrl = 'http://localhost:8081/job-applications';
 
-  private jobApplications: any[] = [];
 
-  constructor(){}
+  constructor(private http: HttpClient){}
 
-  getJobApplications(filterText: string = ''): any[] {
-    if (filterText) {
-      return this.jobApplications.filter(application =>
-        application.jobName.toLowerCase().includes(filterText.toLowerCase()) ||
-        application.company.toLowerCase().includes(filterText.toLowerCase())
-      );
-    }
-    return this.jobApplications;
+  getJobApplications(): Observable<JobApplication[]>{
+    return this.http.get<JobApplication[]>(this.apiUrl);
   }
 
-  addJobApplication(application: any): void {
-    this.jobApplications.push(application);
+ getJobApplicationById(id: number): Observable<JobApplication> {
+    return this.http.get<JobApplication>(`${this.apiUrl}/${id}`);
   }
 
-
-
-  updateJobApplicationStatus(id: number, status: string): void {
-    const application = this.jobApplications.find(app => app.id === id);
-    if (application) {
-      application.status = status;
+  addJobApplication(jobApplication: JobApplication): Observable<JobApplication> {
+    return this.http.post<JobApplication>(this.apiUrl, jobApplication);
   }
-}
+
+  updateJobApplicationStatus(id: number, status: string): Observable<JobApplication> {
+    return this.http.put<JobApplication>(`${this.apiUrl}/${id}/status`, null , {params: {status}});
+  }
+
+  deleteJobApplication(id: number): Observable<void>{
+    return this.http.delete<void>(`${this.apiUrl}/${id}`);
+  }
 
 }

@@ -4,6 +4,8 @@ import { JobApplicationService } from '../../services/job-application.service';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DatePipe } from '@angular/common';
 import { CommonModule } from '@angular/common';
+import { JobApplication } from '../../models/job-application.model';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-job-application-form',
@@ -14,7 +16,7 @@ import { CommonModule } from '@angular/common';
 export class JobApplicationFormComponent implements OnInit {
 
   jobApplicationForm: FormGroup;
-  jobApplications: any = [];
+  jobApplications: JobApplication []= [];
   filterText: string = '';
 
   constructor( private fb: FormBuilder, private jobApplicationService: JobApplicationService) {
@@ -35,32 +37,43 @@ export class JobApplicationFormComponent implements OnInit {
   }
 
   loadJobApplications(): void {
-    this.jobApplications = this.jobApplicationService.getJobApplications();
+    this.jobApplicationService.getJobApplications().subscribe((applications) => {
+      this.jobApplications = applications;
+    });
   }
 
   onSubmit(): void {
-    if (this.jobApplicationForm.valid){
-      const newApplication = {
+    if(this.jobApplicationForm.valid){
+      const newApplication: JobApplication = {
         ...this.jobApplicationForm.value,
-        date: new Date(),
-        id: Date.now()
-      };
-      this.jobApplicationService.addJobApplication(newApplication);
-      this.jobApplicationForm.reset({status: 'Pendente'});
+        date: new Date()
+    };
+    this.jobApplicationService.addJobApplication(newApplication).subscribe(() => {
+      this.jobApplicationForm.reset({ status: 'Pendente' });
       this.loadJobApplications();
-    }
+    });
+   }
   }
 
   filterApplications(): void {
-    this.jobApplications = this.jobApplicationService.getJobApplications(this.filterText);
+    this.jobApplicationService.getJobApplications().subscribe((applications) => {
+      this.jobApplications = applications.filter(application =>
+        application.jobName.toLowerCase().includes(this.filterText.toLocaleLowerCase()) || application.jobDescription.toLowerCase().includes(this.filterText.toLowerCase())
+      );
+    });
   }
 
-  updateStatus(application: any, status: string): void{
-    this.jobApplicationService.updateJobApplicationStatus(application.id, status);
-    this.loadJobApplications();
+  updateStatus(application: JobApplication, status: string): void {
+    if (application.id !== undefined) {
+      this.jobApplicationService.updateJobApplicationStatus(application.id, status).subscribe(() => {
+        this.loadJobApplications();
+      });
+    } else {
+      console.error('Application ID is undefined');
+    }
   }
 
-  addReminder(application: any): void {
+  addReminder(application: JobApplication): void {
     //  next
   }
 
