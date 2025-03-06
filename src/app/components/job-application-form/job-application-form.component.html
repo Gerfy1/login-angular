@@ -1,41 +1,38 @@
-<div class="container mt-4" >
-  <h2>Registrar Nova Candidatura</h2>
-  <form [formGroup]="jobApplicationForm" (ngSubmit)="onSubmit()">
-    <div class="mb-3">
-      <label for="jobName" class="form-label">Nome da Vaga</label>
-      <input type="text" id="jobName" class="form-control" formControlName="jobName" placeholder="Nome da Vaga">
-    </div>
-    <div class="mb-3">
-      <label for="jobDescription" class="form-label">Empresa/Descrição</label>
-      <input type="text" id="jobDescription" class="form-control" formControlName="jobDescription" placeholder="Empresa ou a descrição da vaga">
-    </div>
-    <div class="mb-3">
-      <label for="jobLink" class="form-label"> Link da Vaga </label>
-      <input type="text" id="jobLink" class="form-control" formControlName="jobLink" placeholder="Link da Vaga">
-    </div>
-    <div class="mb-3">
-      <label for="stage" class="form-label">Etapa</label>
-      <input type="text" id="stage" class="form-control" formControlName="stage" placeholder="Etapa">
-    </div>
-    <div class="mb-3">
-      <label for="status" class="form-label">Status</label>
-      <select id="status" formControlName="status" class="form-select">
-        <option value="Pendente">Pendente</option>
-        <option value="Em andamento">Em andamento</option>
-        <option value="Aceito">Aceito</option>
-        <option value="Rejeitado">Rejeitado</option>
-      </select>
-    </div>
-    <div class="mb-3 form-check">
-      <input type="checkbox" id="reminder" formControlName="reminder" class="form-check-input">
-      <label for="reminder" class="form-check-label">Adicionar Lembrete?</label>
-    </div>
-    <div class="mb-3" *ngIf="jobApplicationForm.get('reminder')?.value">
-      <label for="reminderDescription" class="form-label">Descrição do Lembrete</label>
-      <input type="text" id="reminderDescription" formControlName="reminderDescription" class="form-control" placeholder="Descrição do Lembrete">
-      <label for="reminderDate" class="form-label">Data do Lembrete</label>
-      <input type="date" id="reminderDate" formControlName="reminderDate" class="form-control">
-    </div>
-    <button type="submit" class="btn btn-primary">Registrar</button>
-  </form>
-</div>
+<form [formGroup]="jobApplicationForm" (ngSubmit)="onSubmit()" class="job-form">
+  <div class="mb-3">
+    <label for="jobName" class="form-label">Nome da Vaga</label>
+    <input type="text" id="jobName" class="form-control" formControlName="jobName" placeholder="Nome da Vaga">
+  </div>
+  <div class="mb-3">
+    <label for="jobDescription" class="form-label">Empresa/Descrição</label>
+    <input type="text" id="jobDescription" class="form-control" formControlName="jobDescription" placeholder="Empresa ou a descrição da vaga">
+  </div>
+  <div class="mb-3">
+    <label for="jobLink" class="form-label"> Link da Vaga </label>
+    <input type="text" id="jobLink" class="form-control" formControlName="jobLink" placeholder="Link da Vaga">
+  </div>
+  <div class="mb-3">
+    <label for="stage" class="form-label">Etapa</label>
+    <input type="text" id="stage" class="form-control" formControlName="stage" placeholder="Etapa">
+  </div>
+  <div class="mb-3">
+    <label for="status" class="form-label">Status</label>
+    <select id="status" formControlName="status" class="form-select">
+      <option value="Pendente">Pendente</option>
+      <option value="Em andamento">Em andamento</option>
+      <option value="Aceito">Aceito</option>
+      <option value="Rejeitado">Rejeitado</option>
+    </select>
+  </div>
+  <div class="mb-3 form-check">
+    <input type="checkbox" id="reminder" formControlName="reminder" class="form-check-input">
+    <label for="reminder" class="form-check-label">Adicionar Lembrete?</label>
+  </div>
+  <div class="mb-3" *ngIf="jobApplicationForm.get('reminder')?.value">
+    <label for="reminderDescription" class="form-label">Descrição do Lembrete</label>
+    <input type="text" id="reminderDescription" formControlName="reminderDescription" class="form-control" placeholder="Descrição do Lembrete">
+    <label for="reminderDate" class="form-label">Data do Lembrete</label>
+    <input type="date" id="reminderDate" formControlName="reminderDate" class="form-control">
+  </div>
+  <button type="submit" class="btn btn-primary w-100">Registrar</button>
+</form>

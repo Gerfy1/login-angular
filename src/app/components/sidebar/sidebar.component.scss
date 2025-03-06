@@ -1,13 +1,10 @@
 .sidebar {
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 4.5rem;
-  height: 100%;
-  background-color: #f8f9fa;
-  padding: 20px;
-  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
-  z-index: 1100;
+  min-height: 100vh;
+  z-index: 1000;
+  overflow-y: auto;
+  border-right: 1px solid #dee2e6 !important;
+}
 
   .notification-icon {
     position: relative;
@@ -47,7 +44,7 @@
       border-radius: 50%;
     }
   }
-}
+
 
 .nav-link {
   border-radius: 0;
