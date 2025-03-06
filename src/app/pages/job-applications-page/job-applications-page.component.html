@@ -6,8 +6,24 @@
     <div class="col content">
       <app-header></app-header>
       <div class="container mt-4">
-        <app-job-application-form></app-job-application-form>
-        <app-job-aplication-list class="mt-4"></app-job-aplication-list>
+        <div class="row">
+          <div class="col-12 col-lg-4 mb-4 mb-lg-0">
+            <div class="card h-100">
+              <div class="card-body">
+                <h3 class="card-title mb-3"></h3>
+                <app-job-application-form></app-job-application-form>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-12 col-lg-8">
+            <div class="card h-100">
+              <div class="card-body">
+                <app-job-aplication-list></app-job-aplication-list>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>

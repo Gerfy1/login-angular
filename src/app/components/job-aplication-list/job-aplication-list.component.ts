@@ -4,6 +4,8 @@ import { JobApplicationService } from '../../services/job-application.service';
 import { DatePipe } from '@angular/common';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { Subscription } from 'rxjs';
+import { EventService } from '../../services/event.service';
 
 @Component({
   selector: 'app-job-aplication-list',
@@ -14,13 +16,29 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 export class JobAplicationListComponent implements OnInit{
 
   jobApplications: JobApplication[] = [];
+  filteredApplications: JobApplication[] = [];
   filterText: string = '';
 
-  constructor(private jobApplicationService: JobApplicationService) {}
+
+  private subscription: Subscription | null = null;
+  constructor(private jobApplicationService: JobApplicationService, private eventService: EventService) {}
 
 
   ngOnInit(): void {
     this.loadJobApplications();
+    this.subscription = this.eventService.jobApplicationAdded$.subscribe(
+      newApplication => {
+        console.log('New application added:', newApplication);
+        this.jobApplications.push(newApplication);
+        this.applyFilter();
+      }
+    );
+  }
+
+  ngOnDestroy(): void {
+    if (this.subscription) {
+      this.subscription.unsubscribe();
+    }
   }
 
   loadJobApplications(): void {
@@ -29,11 +47,26 @@ export class JobAplicationListComponent implements OnInit{
       (applications) => {
         console.log('Job applications loaded:', applications);
         this.jobApplications = applications;
+        this.applyFilter();
       },
       (error) => {
         console.error('Error loading job applications:', error);
       }
     );
+  }
+
+  applyFilter(): void {
+    if (!this.filterText || this.filterText.trim() === '') {
+      this.filteredApplications = [...this.jobApplications];
+    } else {
+      this.filteredApplications = this.jobApplications.filter(application =>
+        application.jobName.toLowerCase().includes(this.filterText.toLowerCase()) ||
+        application.jobDescription.toLowerCase().includes(this.filterText.toLowerCase())
+      );
+    }
+  }
+  onFilterTextChange(): void {
+    this.applyFilter();
   }
 
   filterApplications(): void {

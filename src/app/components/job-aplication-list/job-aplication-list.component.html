@@ -1,23 +1,38 @@
 <div class="container mt-4">
   <h2>Candidaturas Registradas</h2>
   <div class="mb-3">
-    <input type="text" class="form-control" placeholder="Filtrar por Nome da Vaga ou Empresa" [(ngModel)]="filterText" (input)="filterApplications()">  </div>
-  <ul class="list-group">
-    <li *ngFor="let application of jobApplications" class="list-group-item">
-      <div class="d-flex justify-content-between align-items-center">
-        <div>
-          <h5>{{ application.jobName }}</h5>
-          <p>{{ application.jobDescription }}</p>
-          <p>{{ application.date | date }}</p>
-          <p>Status: {{ application.status }}</p>
-        </div>
-        <div>
-          <button class="btn btn-secondary btn-sm" (click)="updateStatus(application, 'Pendente')">Pendente</button>
-          <button class="btn btn-secondary btn-sm" (click)="updateStatus(application, 'Em andamento')">Em andamento</button>
-          <button class="btn btn-success btn-sm" (click)="updateStatus(application, 'Aceito')">Aceito</button>
-          <button class="btn btn-danger btn-sm" (click)="updateStatus(application, 'Rejeitado')">Rejeitado</button>
-          <button class="btn btn-info btn-sm" (click)="addReminder(application)">Adicionar Lembrete</button>
-        </div>
+    <input type="text" class="form-control" placeholder="Filtrar por Nome da Vaga ou Empresa" [(ngModel)]="filterText" (input)="onFilterTextChange()">
+  </div>
+
+  <div *ngIf="filteredApplications.length === 0" class="alert alert-info">
+    Nenhuma candidatura encontrada.
+  </div>
+
+  <ul class="list-group" *ngIf="filteredApplications.length > 0">
+    <li *ngFor="let application of filteredApplications" class="list-group-item">
+      <div class="mb-3">
+        <h5 class="text-break">{{ application.jobName }}</h5>
+        <p class="text-break">{{ application.jobDescription }}</p>
+        <p *ngIf="application.date">{{ application.date | date }}</p>
+        <p><strong>Status:</strong> {{ application.status }}</p>
+      </div>
+
+      <div class="d-flex flex-wrap gap-2 pb-2">
+        <button class="btn btn-warning btn-sm rounded-pill shadow-sm" (click)="updateStatus(application, 'Pendente')">
+          <i class="bi bi-hourglass-split me-1"></i> Pendente
+        </button>
+        <button class="btn btn-primary btn-sm rounded-pill shadow-sm" (click)="updateStatus(application, 'Em andamento')">
+          <i class="bi bi-arrow-repeat me-1"></i> Em andamento
+        </button>
+        <button class="btn btn-success btn-sm rounded-pill shadow-sm" (click)="updateStatus(application, 'Aceito')">
+          <i class="bi bi-check-circle me-1"></i> Aceito
+        </button>
+        <button class="btn btn-danger btn-sm rounded-pill shadow-sm" (click)="updateStatus(application, 'Rejeitado')">
+          <i class="bi bi-x-circle me-1"></i> Rejeitado
+        </button>
+        <button class="btn btn-dark btn-sm rounded-pill shadow-sm" (click)="addReminder(application)">
+          <i class="bi bi-bell me-1"></i> Lembrete
+        </button>
       </div>
     </li>
   </ul>

@@ -1,0 +1,30 @@
+.btn {
+  transition: all 0.3s ease;
+  font-weight: 500;
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1) !important;
+}
+
+.btn-warning {
+  color: #212529;
+}
+
+.rounded-pill {
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+.list-group-item {
+  border-radius: 8px;
+  margin-bottom: 8px;
+  border-left: 5px solid #dee2e6;
+  transition: all 0.2s;
+}
+
+.list-group-item:hover {
+  border-left-color: #0d6efd;
+  background-color: rgba(13, 110, 253, 0.02);
+}

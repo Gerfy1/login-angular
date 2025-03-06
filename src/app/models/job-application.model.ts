@@ -8,4 +8,8 @@ export interface JobApplication {
   date: Date;
   reminder?: Date;
   reminderDescription?: string;
+  user?: {
+    id: number;
+    username?: string;
+  }
 }

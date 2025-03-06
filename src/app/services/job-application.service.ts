@@ -1,7 +1,8 @@
 import { Injectable } from "@angular/core";
 import { HttpClient, HttpHeaders } from "@angular/common/http";
-import { Observable } from "rxjs";
+import { Observable, tap } from "rxjs";
 import { JobApplication } from "../models/job-application.model";
+import { EventService } from "./event.service";
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +13,7 @@ export class JobApplicationService {
   private apiUrl = 'http://localhost:81/api/job-applications';
 
 
-  constructor(private http: HttpClient){}
+  constructor(private http: HttpClient, private eventService: EventService){}
 
   private getAuthHeaders(): HttpHeaders {
     const token = sessionStorage.getItem('auth-token');
@@ -41,10 +42,17 @@ export class JobApplicationService {
   }
 
   addJobApplication(jobApplication: JobApplication): Observable<JobApplication> {
+    const userId = sessionStorage.getItem('user-id');
+    jobApplication.user = { id: Number(userId) };
     const headers = this.getAuthHeaders();
     console.log('Adding job application:', jobApplication);
     console.log('Headers:', headers);
-    return this.http.post<JobApplication>(this.apiUrl, jobApplication, { headers });
+    return this.http.post<JobApplication>(this.apiUrl, jobApplication, { headers })
+    .pipe(
+      tap(newJobApplication => {
+        this.eventService.notifyJobApplicationAdded(newJobApplication);
+      })
+    );
   }
 
   updateJobApplicationStatus(id: number, status: string): Observable<void> {
