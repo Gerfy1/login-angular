@@ -55,9 +55,9 @@ export class JobApplicationService {
     );
   }
 
-  updateJobApplicationStatus(id: number, status: string): Observable<void> {
+  updateJobApplicationStatus(id: number, status: string): Observable<JobApplication> {
     const headers = this.getAuthHeaders();
-    return this.http.put<void>(`${this.apiUrl}/${id}/status`, { status }, { headers });
+    return this.http.put<JobApplication>(`${this.apiUrl}/${id}/status?status=${status}`, {}, { headers });
   }
 
   deleteJobApplication(id: number): Observable<void> {
