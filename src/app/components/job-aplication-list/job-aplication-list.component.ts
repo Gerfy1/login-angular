@@ -6,6 +6,9 @@ import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { EventService } from '../../services/event.service';
+import { MatDialog } from '@angular/material/dialog';
+import {MatSnackBar} from '@angular/material/snack-bar';
+import { AddReminderDialogComponent } from '../add-reminder-dialog/add-reminder-dialog.component';
 
 @Component({
   selector: 'app-job-aplication-list',
@@ -21,7 +24,7 @@ export class JobAplicationListComponent implements OnInit{
 
 
   private subscription: Subscription | null = null;
-  constructor(private jobApplicationService: JobApplicationService, private eventService: EventService) {}
+  constructor(private jobApplicationService: JobApplicationService, private eventService: EventService, private dialog: MatDialog, private snackbar:MatSnackBar) {}
 
 
   ngOnInit(): void {
@@ -87,6 +90,17 @@ export class JobAplicationListComponent implements OnInit{
   }
 
   addReminder(application: JobApplication): void {
-    //  next
+    const dialogRef = this.dialog.open(AddReminderDialogComponent, {
+      width: '500px',
+      data: { jobApplication: application }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.snackbar.open('Lembre adicionado com sucesso!', 'Close', {
+          duration: 3000
+        });
+      }
+    });
   }
 }

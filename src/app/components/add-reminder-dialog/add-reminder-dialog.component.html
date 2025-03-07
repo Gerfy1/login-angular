@@ -1,1 +1,32 @@
-<p>add-reminder-dialog works!</p>
+<div class="p-3">
+  <h2 class="mb-3">Adicionar Lembrete</h2>
+  <p class="mb-3">Vaga: <strong>{{ data.jobApplication.jobName }}</strong></p>
+
+  <form [formGroup]="reminderForm" (ngSubmit)="onSubmit()">
+    <div class="mb-3">
+      <label for="title" class="form-label">Título</label>
+      <input type="text" id="title" formControlName="title" class="form-control" placeholder="Título do lembrete">
+      <div class="text-danger" *ngIf="reminderForm.controls['title'].invalid && reminderForm.controls['title'].touched">
+        Título é obrigatório
+      </div>
+    </div>
+
+    <div class="mb-3">
+      <label for="description" class="form-label">Descrição</label>
+      <textarea id="description" formControlName="description" class="form-control" rows="3" placeholder="Descrição do lembrete"></textarea>
+    </div>
+
+    <div class="mb-3">
+      <label for="date" class="form-label">Data</label>
+      <input type="datetime-local" id="date" formControlName="date" class="form-control">
+      <div class="text-danger" *ngIf="reminderForm.controls['date'].invalid && reminderForm.controls['date'].touched">
+        Data é obrigatória
+      </div>
+    </div>
+
+    <div class="d-flex justify-content-end gap-2">
+      <button type="button" class="btn btn-outline-secondary" (click)="cancel()">Cancelar</button>
+      <button type="submit" class="btn btn-primary" [disabled]="reminderForm.invalid">Salvar</button>
+    </div>
+  </form>
+</div>
