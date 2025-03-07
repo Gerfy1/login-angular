@@ -9,7 +9,7 @@ import { NgModule } from '@angular/core';
 import { DashboardHomeComponent } from './pages/dashboard-home/dashboard-home.component';
 import { JobApplicationsPageComponent } from './pages/job-applications-page/job-applications-page.component';
 import { AuthGuard } from './guards/auth.guard';
-
+import { CalendarPageComponent } from './pages/calendar-page/calendar-page.component';
 
 export const routes: Routes = [
   {
@@ -46,6 +46,11 @@ export const routes: Routes = [
   {
     path: '**',
     redirectTo: '/login'
+  },
+  {
+    path: 'calendar',
+    component: CalendarPageComponent,
+    canActivate: [AuthGuard]
   }
 ];
 
