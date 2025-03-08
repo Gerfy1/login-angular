@@ -1,0 +1,21 @@
+<div class="reminder-detail-container">
+  <h2 mat-dialog-title>{{ data.event.title }}</h2>
+
+  <mat-dialog-content>
+    <div class="detail-item">
+      <span class="label">Data:</span>
+      <span class="value">{{ data.event.start | date:'dd/MM/yyyy HH:mm' }}</span>
+    </div>
+
+    <div class="detail-item" *ngIf="data.event.meta?.description">
+      <span class="label">Descrição:</span>
+      <span class="value">{{ data.event.meta?.description }}</span>
+    </div>
+  </mat-dialog-content>
+
+  <mat-dialog-actions class="justify-content-end">
+    <button mat-button (click)="close()">Fechar</button>
+    <button mat-button color="primary" (click)="edit()">Editar</button>
+    <button mat-button color="warn" (click)="delete()">Excluir</button>
+  </mat-dialog-actions>
+</div>

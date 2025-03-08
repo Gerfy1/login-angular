@@ -14,6 +14,9 @@ import { ToastrModule } from 'ngx-toastr';
 import { HttpClient, HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AuthInterceptor } from './app/interceptors/auth.interceptor';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatButtonModule } from '@angular/material/button';
 
 
 if (environment.production){
@@ -31,7 +34,10 @@ bootstrapApplication(AppComponent, {
       HttpClientModule,
       HttpClient,
       ReactiveFormsModule,
-      FormsModule
+      FormsModule,
+      MatDialogModule,
+      MatSnackBarModule,
+      MatButtonModule
     ),
     {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true}
   ]

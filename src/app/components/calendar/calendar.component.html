@@ -52,7 +52,9 @@
         [activeDayIsOpen]="activeDayIsOpen"
         [refresh]="refresh"
         (dayClicked)="dayClicked($event.day)"
-        (eventClicked)="handleEventClick($event.event)">
+        (eventClicked)="handleEventClick($event.event)"
+        [cellTemplate]="customCellTemplate"
+        [openDayEventsTemplate]="openDayEventsTemplate">
       </mwl-calendar-month-view>
       <mwl-calendar-week-view
         *ngSwitchCase="CalendarView.Week"
@@ -69,3 +71,42 @@
     </div>
   </div>
 </div>
+<ng-template
+  #openDayEventsTemplate
+  let-events="events"
+  let-eventClicked="eventClicked"
+  let-isOpen="isOpen">
+  <div class="cal-open-day-events" [@collapse] *ngIf="isOpen">
+    <div
+      *ngFor="let event of events"
+      [ngClass]="event?.cssClass"
+      class="cal-open-event"
+      (click)="$event.stopPropagation()">
+      <span class="cal-event-title">{{ event.title }}</span>
+      <div class="cal-event-actions">
+        <a class="cal-event-action" (click)="$event.stopPropagation(); editReminder(event)" title="Editar">
+          <i class="fas fa-pencil-alt"></i>
+        </a>
+        <a class="cal-event-action" (click)="$event.stopPropagation(); deleteReminder(event)" title="Excluir">
+          <i class="fas fa-trash-alt"></i>
+        </a>
+      </div>
+    </div>
+  </div>
+</ng-template>
+<ng-template
+  #customCellTemplate
+  let-day="day"
+  let-locale="locale">
+  <div class="cal-cell-top">
+    <span class="cal-day-number">{{ day.date | date:'d' }}</span>
+  </div>
+  <div class="cal-events" *ngIf="day.events.length > 0">
+    <div
+      *ngFor="let event of day.events"
+      class="cal-event-marker"
+      (click)="$event.stopPropagation(); handleEventClick(event)">
+      <span class="cal-event-title">{{ event.title }}</span>
+    </div>
+  </div>
+</ng-template>

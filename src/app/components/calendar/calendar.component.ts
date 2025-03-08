@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CalendarModule, DateAdapter } from 'angular-calendar';
 import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
@@ -11,14 +11,30 @@ import { JobApplicationService } from '../../services/job-application.service';
 import { MatDialog } from '@angular/material/dialog';
 import { AddReminderDialogComponent } from '../add-reminder-dialog/add-reminder-dialog.component';
 import { isSameDay } from 'date-fns';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { ReminderDetailsDialogComponent } from '../reminder-details-dialog/reminder-details-dialog.component';
+import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
+import { trigger, style, transition, animate } from '@angular/animations'; // Adicione esta linha
 
 @Component({
   selector: 'app-calendar',
   imports: [CommonModule, CalendarModule],
   templateUrl: './calendar.component.html',
-  styleUrl: './calendar.component.scss'
+  styleUrl: './calendar.component.scss',
+  animations: [
+    trigger('collapse', [
+      transition('void => *', [
+        style({ height: '0', overflow: 'hidden' }),
+        animate('150ms', style({ height: '*' }))
+      ]),
+      transition('* => void', [
+        style({ height: '*', overflow: 'hidden' }),
+        animate('150ms', style({ height: '0' }))
+      ])
+    ])
+  ]
 })
-export class CalendarComponent implements OnInit{
+export class CalendarComponent implements OnInit, OnDestroy{
 
   view: CalendarView = CalendarView.Month;
   CalendarView = CalendarView;
@@ -29,7 +45,7 @@ export class CalendarComponent implements OnInit{
   refresh = new Subject<void>();
   private destroy$ = new Subject<void>();
 
-  constructor(private reminderService: ReminderService, private dialog: MatDialog, private jobApplicationService: JobApplicationService) {}
+  constructor(private reminderService: ReminderService, private dialog: MatDialog, private jobApplicationService: JobApplicationService, private snackBar: MatSnackBar) {}
 
   ngOnInit(): void {
     this.loadReminders();
@@ -52,10 +68,15 @@ export class CalendarComponent implements OnInit{
   }
 
   openAddReminderDialog(): void {
-    this.jobApplicationService.getJobApplications().subscribe(applications => {
-      if (applications.length === 0 ){
-        alert('Você precisa ter pelo menos uma candidatura registrada para adicionar um lembrete');
-        return;
+      this.jobApplicationService.getJobApplications().subscribe(applications => {
+        if (applications.length === 0) {
+          this.snackBar.open('Você precisa ter pelo menos uma candidatura registrada para adicionar um lembrete', 'OK', {
+            duration: 5000,
+            horizontalPosition: 'center',
+            verticalPosition: 'bottom',
+            panelClass: ['warning-snackbar']
+          });
+          return;
       }
       const dialogRef = this.dialog.open(AddReminderDialogComponent, {
         width: '400px',
@@ -93,7 +114,12 @@ export class CalendarComponent implements OnInit{
 openAddReminderDialogForDate(date: Date): void {
   this.jobApplicationService.getJobApplications().subscribe(applications => {
     if (applications.length === 0) {
-      alert('Você precisa ter pelo menos uma candidatura registrada para adicionar um lembrete');
+      this.snackBar.open('Você precisa ter pelo menos uma candidatura registrada para adicionar um lembrete', 'OK', {
+        duration: 5000,
+        horizontalPosition: 'center',
+        verticalPosition: 'bottom',
+        panelClass: ['warning-snackbar']
+      });
       return;
     }
 
@@ -129,8 +155,8 @@ openAddReminderDialogForDate(date: Date): void {
       start: eventDate,
       allDay: false,
       color: {
-        primary: '#ad2121',
-        secondary: '#FAE3E3'
+        primary: '#1976d2',
+        secondary: '#e3f2fd'
       },
       meta: {
         description: reminder.description,
@@ -145,8 +171,71 @@ openAddReminderDialogForDate(date: Date): void {
   }
 
   handleEventClick(event: CalendarEvent): void {
-    console.log('clicado', event);
+    const dialogRef = this.dialog.open(ReminderDetailsDialogComponent, {
+      width: '400px',
+      data: { event }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result?.action === 'edit') {
+        this.editReminder(event);
+      } else if (result?.action === 'delete') {
+        this.deleteReminder(event);
+      }
+    });
+  }
+  editReminder(event: CalendarEvent): void {
+    const reminderId = event.id as number;
+
+    this.reminderService.getReminderById(reminderId).subscribe(reminder => {
+      this.jobApplicationService.getJobApplication(reminder.jobApplicationId).subscribe(jobApplication => {
+        const dialogRef = this.dialog.open(AddReminderDialogComponent, {
+          width: '400px',
+          data: {
+            jobApplication,
+            reminder,
+            isEditing: true
+          }
+        });
+
+        dialogRef.afterClosed().subscribe(result => {
+          if (result) {
+            this.loadReminders();
+          }
+        });
+      });
+    });
   }
 
+  deleteReminder(event: CalendarEvent): void {
+    const reminderId = event.id as number;
+
+  const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+    width: '350px',
+    data: { title: 'Confirmação', message: 'Deseja realmente excluir este lembrete?' }
+  });
+
+  dialogRef.afterClosed().subscribe(result => {
+    if (result) {
+      this.reminderService.deleteReminder(reminderId).subscribe({
+        next: () => {
+          this.loadReminders();
+          this.snackBar.open('Lembrete excluído com sucesso!', 'OK', {
+            duration: 3000,
+            horizontalPosition: 'center',
+            verticalPosition: 'bottom',
+            panelClass: ['success-snackbar']
+          });
+        },
+        error: (error) => {
+          this.snackBar.open('Erro ao excluir lembrete', 'OK', {
+            duration: 3000,
+            panelClass: ['error-snackbar']
+          });
+        }
+      });
+    }
+  });
+}
 
 }

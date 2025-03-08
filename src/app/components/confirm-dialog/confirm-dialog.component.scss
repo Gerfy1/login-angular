@@ -1,0 +1,26 @@
+.success-snackbar {
+  background: #4CAF50;
+  color: white;
+
+  .mat-simple-snackbar-action {
+    color: white;
+  }
+}
+
+.warning-snackbar {
+  background: #FFC107;
+  color: #333;
+
+  .mat-simple-snackbar-action {
+    color: #333;
+  }
+}
+
+.error-snackbar {
+  background: #F44336;
+  color: white;
+
+  .mat-simple-snackbar-action {
+    color: white;
+  }
+}

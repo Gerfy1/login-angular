@@ -35,6 +35,9 @@ export class JobApplicationService {
     console.log('Headers:', headers);
     return this.http.get<JobApplication[]>(this.apiUrl, { headers });
   }
+  getJobApplication(id: number): Observable<JobApplication> {
+    return this.http.get<JobApplication>(`${this.apiUrl}/${id}`);
+  }
 
   getJobApplicationById(id: number): Observable<JobApplication> {
     const headers = this.getAuthHeaders();

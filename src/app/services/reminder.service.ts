@@ -70,38 +70,54 @@ export class ReminderService {
     );
   }
 
-  updateReminder(id: number, reminder: Reminder): Observable<Reminder> {
-    const headers = this.getAuthHeaders();
-    return this.http.put<Reminder>(`${this.apiUrl}/${id}`, reminder, { headers })
-    .pipe(
-      tap(updatedReminder => {
-        const currentReminders = this.remindersSubject.value;
-        const index = currentReminders.findIndex(r => r.id === id);
-        if (index !== -1){
-          const updatedReminders = [...currentReminders];
-          updatedReminders[index] = {
-            ...updatedReminder,
-            color: {
-              primary: '#ad2121',
-              secondary: '#FAE3E3'
-            }
-          };
-          this.remindersSubject.next(updatedReminders);
-        }
-      })
+  updateReminder(id: number, reminder: ReminderCreate): Observable<Reminder> {
+    return this.http.put<Reminder>(`${this.apiUrl}/${id}`, reminder).pipe(
+      tap(() => this.loadReminders())
     );
   }
 
-  deleteReminder(id: number): Observable<void> {
-    const headers = this.getAuthHeaders();
-    return this.http.delete<void>(`${this.apiUrl}/${id}`, { headers })
-    .pipe(
-      tap(() => {
-        const currentReminders = this.remindersSubject.value;
-        const updatedReminders = currentReminders.filter(r => r.id !== id);
-        this.remindersSubject.next(updatedReminders);
-      })
+  // updateReminder(id: number, reminder: Reminder): Observable<Reminder> {
+  //   const headers = this.getAuthHeaders();
+  //   return this.http.put<Reminder>(`${this.apiUrl}/${id}`, reminder, { headers })
+  //     .pipe(
+  //       tap(updatedReminder => {
+  //         const currentReminders = this.remindersSubject.value;
+  //         const index = currentReminders.findIndex(r => r.id === id);
+  //         if (index !== -1) {
+  //           const updatedReminders = [...currentReminders];
+  //           updatedReminders[index] = {
+  //             ...updatedReminder,
+  //             color: {
+  //               primary: '#ad2121',
+  //               secondary: '#FAE3E3'
+  //             }
+  //           };
+  //           this.remindersSubject.next(updatedReminders);
+  //         }
+  //       })
+  //     );
+  // }
+
+  getReminderById(id: number): Observable<Reminder> {
+    return this.http.get<Reminder>(`${this.apiUrl}/${id}`);
+  }
+
+  deleteReminder(id: number): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/${id}`).pipe(
+      tap(() => this.loadReminders())
     );
   }
+
+  // deleteReminder(id: number): Observable<void> {
+  //   const headers = this.getAuthHeaders();
+  //   return this.http.delete<void>(`${this.apiUrl}/${id}`, { headers })
+  //   .pipe(
+  //     tap(() => {
+  //       const currentReminders = this.remindersSubject.value;
+  //       const updatedReminders = currentReminders.filter(r => r.id !== id);
+  //       this.remindersSubject.next(updatedReminders);
+  //     })
+  //   );
+  // }
 
 }
