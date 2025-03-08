@@ -5,6 +5,7 @@ import { tap } from "rxjs";
 import { Reminder } from "../models/reminder.model";
 import { environment } from "../../environments/environment";
 import { ReminderCreate } from "../models/reminder-create.model";
+import { NotificationService } from "./notification.service";
 
 @Injectable({
   providedIn: 'root'
@@ -18,7 +19,7 @@ export class ReminderService {
 
   public reminders$ = this.remindersSubject.asObservable();
 
-  constructor (private http: HttpClient) {
+  constructor (private http: HttpClient, private notificationService: NotificationService) {
     this.loadReminders();
   }
 
@@ -57,6 +58,13 @@ export class ReminderService {
     return this.http.post<Reminder>(this.apiUrl, reminder, { headers })
     .pipe(
       tap(newReminder => {
+        const date = new Date(newReminder.date);
+        this.notificationService.addNotification(
+          `Novo lembrete criado: "${newReminder.title}" para ${date.toLocaleString()}`,
+          'reminder',
+          newReminder.id
+        );
+        this.loadReminders();
         const currentReminders = this.remindersSubject.value;
         const updatedReminders = [...currentReminders, {
           ...newReminder,
@@ -72,7 +80,14 @@ export class ReminderService {
 
   updateReminder(id: number, reminder: ReminderCreate): Observable<Reminder> {
     return this.http.put<Reminder>(`${this.apiUrl}/${id}`, reminder).pipe(
-      tap(() => this.loadReminders())
+      tap(updatedReminder => {
+        this.notificationService.addNotification(
+          `Lembrete atualizado: "${updatedReminder.title}"`,
+          'reminder',
+          updatedReminder.id
+        );
+        this.loadReminders();
+      })
     );
   }
 
@@ -104,7 +119,13 @@ export class ReminderService {
 
   deleteReminder(id: number): Observable<any> {
     return this.http.delete(`${this.apiUrl}/${id}`).pipe(
-      tap(() => this.loadReminders())
+      tap(() => {
+        this.notificationService.addNotification(
+          `Lembrete removido`,
+          'system'
+        );
+        this.loadReminders();
+      })
     );
   }
 

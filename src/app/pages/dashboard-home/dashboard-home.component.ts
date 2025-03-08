@@ -22,7 +22,6 @@ export class DashboardHomeComponent implements OnInit {
 
   ngOnInit() {
     this.activeDayIsOpen = false;
-    this.notificationService.addNotification('Welcome to the dashboard!');
   }
 
   activeDayIsOpen: boolean = false;
@@ -61,12 +60,10 @@ export class DashboardHomeComponent implements OnInit {
     event.start = newStart;
     event.end = newEnd;
     this.refresh.next(null);
-    this.notificationService.addNotification('Evento atualizado!');
   }
 
   handleEvent(action: string, event: CalendarEvent): void {
     console.log(action, event);
-    this.notificationService.addNotification(`Evento ${action}!`);
   }
 }
 

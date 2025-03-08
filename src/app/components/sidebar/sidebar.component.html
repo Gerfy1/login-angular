@@ -5,7 +5,7 @@
 
   <ul class="nav nav-pills flex-column mb-auto w-100 text-center">
     <li>
-      <a href="dashbard" class="nav-link active py-3" title="Home" data-bs-toggle="tooltip" data-bs-placement="right">
+      <a href="dashboard" class="nav-link active py-3" title="Home" data-bs-toggle="tooltip" data-bs-placement="right">
         <i class="bi bi-house-door fs-4"></i>
       </a>
     </li>
@@ -29,8 +29,12 @@
         <i class="bi bi-person fs-4"></i>
       </a>
     </li>
-    <div class="notification-icon">
-      <i class="bi bi-bell" (click)="toggleNotifications()"></i>
+    <div class="notification-icon position-relative">
+      <i class="bi bi-bell fs-4" (click)="toggleNotifications()"></i>
+      <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
+            *ngIf="unreadCount > 0">
+        {{ unreadCount }}
+      </span>
       <div class="notification-list-container" *ngIf="showNotifications">
         <app-notification-list></app-notification-list>
       </div>

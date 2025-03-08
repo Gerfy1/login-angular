@@ -1,8 +1,9 @@
 import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { NotificationListComponent } from '../notification-list/notification-list.component';
 import { NotificationService } from '../../services/notification.service';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DOCUMENT } from '@angular/common';
 import { Router } from '@angular/router';
+import { Inject } from '@angular/core';
 
 declare var bootstrap: any;
 
@@ -16,12 +17,25 @@ declare var bootstrap: any;
 export class SidebarComponent implements AfterViewInit, OnInit {
 
   showNotifications: boolean = false;
-  constructor ( private notificationService: NotificationService, private router: Router ){}
+  unreadCount: number = 0;
+
+  constructor ( private notificationService: NotificationService, private router: Router, @Inject(DOCUMENT) private document: Document ){
+    this.document.addEventListener('click', (event) => {
+      const target = event.target as HTMLElement;
+      if (!target.closest('.notification-icon') && this.showNotifications) {
+        this.showNotifications = false;
+      }
+    });
+  }
 
   ngOnInit(): void {
+    this.notificationService.getNotificationsObservable().subscribe(notifications => {
+      this.unreadCount = notifications.filter(n => !n.read).length;
+    });
   }
   toggleNotifications(): void {
     this.showNotifications = !this.showNotifications;
+
   }
 
   ngAfterViewInit() {
