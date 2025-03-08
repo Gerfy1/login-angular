@@ -17,6 +17,8 @@ import { AuthInterceptor } from './app/interceptors/auth.interceptor';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatButtonModule } from '@angular/material/button';
+import { NgxSpinner, NgxSpinnerModule } from 'ngx-spinner';
+import { LoadingInterceptor } from './app/interceptors/loading.interceptor';
 
 
 if (environment.production){
@@ -37,8 +39,10 @@ bootstrapApplication(AppComponent, {
       FormsModule,
       MatDialogModule,
       MatSnackBarModule,
-      MatButtonModule
+      MatButtonModule,
+      NgxSpinnerModule
     ),
-    {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true}
+    {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true},
+    {provide: HTTP_INTERCEPTORS, useClass: LoadingInterceptor, multi: true}
   ]
 }).catch((err) => console.error(err));

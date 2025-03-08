@@ -1,5 +1,5 @@
 <div class="card">
-  <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+  <div class="card-header bg-black text-white d-flex justify-content-between align-items-center">
     <h3 class="mb-0">Calendário de Lembretes</h3>
     <button class="btn btn-light me-3" (click)="openAddReminderDialog()">
       <i class="fas fa-plus"></i> Novo Lembrete
@@ -31,13 +31,13 @@
   <div class="card-body">
     <div class="d-flex justify-content-between mb-4">
       <div class="btn-group">
-        <button class="btn btn-primary" mwlCalendarPreviousView [view]="view" [(viewDate)]="viewDate">
+        <button class="btn btn-dark" mwlCalendarPreviousView [view]="view" [(viewDate)]="viewDate">
           Anterior
         </button>
         <button class="btn btn-outline-secondary" mwlCalendarToday [(viewDate)]="viewDate">
           Hoje
         </button>
-        <button class="btn btn-primary" mwlCalendarNextView [view]="view" [(viewDate)]="viewDate">
+        <button class="btn btn-dark" mwlCalendarNextView [view]="view" [(viewDate)]="viewDate">
           Próximo
         </button>
       </div>

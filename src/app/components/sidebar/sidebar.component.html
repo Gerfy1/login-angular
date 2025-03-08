@@ -11,7 +11,7 @@
     </li>
     <li>
       <a href="dashboard" class="nav-link text-primary py-3" title="Dashboard" data-bs-toggle="tooltip" data-bs-placement="right">
-        <i class="bi bi-speedometer2 fs-4"></i>
+        <i class="bi bi-ui-checks-grid fs-4"></i>
       </a>
     </li>
     <li>
@@ -20,16 +20,16 @@
       </a>
     </li>
     <li>
-      <a href="agendamentos" class="nav-link text-primary py-3" title="Agendamentos" data-bs-toggle="tooltip" data-bs-placement="right">
-        <i class="bi bi-app fs-4"></i>
+      <a href="calendar" class="nav-link text-primary py-3" title="Calendario" data-bs-toggle="tooltip" data-bs-placement="right">
+        <i class="bi bi-calendar2-plus fs-4"></i>
       </a>
     </li>
     <li>
-      <a href="notificacoes" class="nav-link text-primary py-3" title="Notificações" data-bs-toggle="tooltip" data-bs-placement="right">
+      <a href="perfil" class="nav-link text-primary py-3" title="Perfil" data-bs-toggle="tooltip" data-bs-placement="right">
         <i class="bi bi-person fs-4"></i>
       </a>
     </li>
-    <div class="notification-icon position-relative">
+    <div class="notification-icon position-relative nav-link text-primary py-3" title="Notificações" data-bs-toggle="tooltip" data-bs-placement="right">
       <i class="bi bi-bell fs-4" (click)="toggleNotifications()"></i>
       <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
             *ngIf="unreadCount > 0">

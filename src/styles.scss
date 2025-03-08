@@ -1,14 +1,46 @@
 @use 'ngx-toastr/toastr' as *;
 @import "../node_modules/angular-calendar/css/angular-calendar.css";
 
-*{
+* {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
   font-family: "Poppins", sans-serif;
 }
 
-html, body{
-  height: 100%;
+::ng-deep .ngx-spinner {
+  .ball-clip-rotate-multiple {
+    top: 40% !important;
+  }
 
+  .ball-clip-rotate-multiple > div {
+    border-color: #007bff transparent #007bff transparent !important;
+    box-shadow: 0 0 15px rgba(0, 123, 255, 0.5) !important;
+  }
+
+  .ball-clip-rotate-multiple > div:last-child {
+    width: 15px !important;
+    height: 15px !important;
+  }
+
+  p {
+    margin-top: 80px !important;
+    font-family: 'Montserrat', sans-serif !important;
+    font-size: 18px !important;
+    font-weight: 500 !important;
+    letter-spacing: 1px !important;
+    color: #ffffff !important;
+    text-shadow: 0 2px 5px rgba(0, 0, 0, 0.3) !important;
+    animation: pulse 1.5s infinite ease-in-out !important;
+  }
+}
+
+@keyframes pulse {
+  0% { opacity: 0.7; }
+  50% { opacity: 1; }
+  100% { opacity: 0.7; }
+}
+
+html, body {
+  height: 100%;
 }
