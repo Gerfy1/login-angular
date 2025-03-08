@@ -11,7 +11,7 @@ import { environment } from "../../environments/environment";
 
 export class ReminderService {
 
-  private apiUrl = `${environment.apiUrl}/reminders`;
+  private apiUrl = `http://localhost:81/api/reminders`;
   private remindersSubject = new BehaviorSubject<Reminder[]>([]);
   private reminders: Reminder[] = [];
 
@@ -71,7 +71,7 @@ export class ReminderService {
 
   updateReminder(id: number, reminder: Reminder): Observable<Reminder> {
     const headers = this.getAuthHeaders();
-    return this.http.put<Reminder>(`${this.apiUrl}/$`, reminder, { headers })
+    return this.http.put<Reminder>(`${this.apiUrl}/${id}`, reminder, { headers })
     .pipe(
       tap(updatedReminder => {
         const currentReminders = this.remindersSubject.value;

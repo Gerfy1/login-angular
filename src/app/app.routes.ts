@@ -39,6 +39,11 @@ export const routes: Routes = [
     canActivate: [AuthGuard]
   },
   {
+    path: 'calendar',
+    component: CalendarPageComponent,
+    canActivate: [AuthGuard]
+  },
+  {
     path: '',
     redirectTo: '/login',
     pathMatch: 'full'
@@ -47,11 +52,6 @@ export const routes: Routes = [
     path: '**',
     redirectTo: '/login'
   },
-  {
-    path: 'calendar',
-    component: CalendarPageComponent,
-    canActivate: [AuthGuard]
-  }
 ];
 
 @NgModule({

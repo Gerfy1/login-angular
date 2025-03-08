@@ -38,6 +38,9 @@ export class AddReminderDialogComponent {
         isCompleted: false,
         jobApplicationId: this.data.jobApplication.id as number
       };
+
+      console.log('Enviando lembrete:', reminder);
+
       this.reminderService.addReminder(reminder).subscribe({
         next: () => {
           this.dialogRef.close(true);
