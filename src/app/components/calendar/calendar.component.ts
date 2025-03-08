@@ -40,7 +40,9 @@ export class CalendarComponent implements OnInit{
     this.reminderService.getReminders()
       .pipe(takeUntil(this.destroy$))
       .subscribe(reminders => {
+        console.log('Reminders recebidos:', reminders);
         this.events = reminders.map(reminder => this.mapReminderToEvent(reminder));
+        console.log('Events mapeados para o calendário:', this.events);
       });
   }
 
@@ -88,10 +90,13 @@ export class CalendarComponent implements OnInit{
   }
 
   private mapReminderToEvent(reminder: Reminder): CalendarEvent {
+    const eventDate = new Date(reminder.date);
+    console.log(`Reminder ${reminder.id}: Data original=${reminder.date}, convertida=${eventDate}`);
     return {
       id: reminder.id,
       title: reminder.title,
       start: new Date(reminder.date),
+      allDay: true,
       color: reminder.color || {
         primary: '#ad2121',
         secondary: '#FAE3E3'
