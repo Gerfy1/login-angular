@@ -90,14 +90,21 @@ export class CalendarComponent implements OnInit{
   }
 
   private mapReminderToEvent(reminder: Reminder): CalendarEvent {
-    const eventDate = new Date(reminder.date);
-    console.log(`Reminder ${reminder.id}: Data original=${reminder.date}, convertida=${eventDate}`);
+    let eventDate: Date;
+    if (Array.isArray(reminder.date)){
+      const [year, month, day, hour, minute] = reminder.date;
+      eventDate = new Date(year, month - 1, day, hour, minute);
+      console.log(`Reminder ${reminder.id}: Data como Array convertida para ${eventDate}`);
+    } else {
+      eventDate = new Date(reminder.date);
+      console.log(`Reminder ${reminder.id}: Data como Date convertida para ${eventDate}`);
+    }
     return {
       id: reminder.id,
       title: reminder.title,
-      start: new Date(reminder.date),
-      allDay: true,
-      color: reminder.color || {
+      start: eventDate,
+      allDay: false,
+      color: {
         primary: '#ad2121',
         secondary: '#FAE3E3'
       },
