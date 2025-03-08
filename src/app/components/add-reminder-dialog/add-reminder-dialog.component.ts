@@ -4,7 +4,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { JobApplication } from '../../models/job-application.model';
 import { ReminderService } from '../../services/reminder.service';
-
+import { ReminderCreate } from '../../models/reminder-create.model';
 @Component({
   selector: 'app-add-reminder-dialog',
   imports: [CommonModule, ReactiveFormsModule],
@@ -32,18 +32,30 @@ export class AddReminderDialogComponent {
   }
 
   onSubmit(): void {
-    if (this.reminderForm.valid){
+    if (this.reminderForm.valid) {
+      const localDate = new Date(this.reminderForm.value.date);
+      const year = localDate.getFullYear();
+      const month = String(localDate.getMonth() + 1).padStart(2, '0');
+      const day = String(localDate.getDate()).padStart(2, '0');
+      const hours = String(localDate.getHours()).padStart(2, '0');
+      const minutes = String(localDate.getMinutes()).padStart(2, '0');
+
+      const formattedDate = `${year}-${month}-${day}T${hours}:${minutes}`;
+
+      console.log('Data original:', localDate);
+      console.log('Data formatada para envio:', formattedDate);
+
       const reminder = {
         title: this.reminderForm.value.title,
         description: this.reminderForm.value.description,
-        date: new Date(this.reminderForm.value.date),
+        date: formattedDate,
         completed: false,
         jobApplicationId: this.data.jobApplication.id as number
       };
 
       console.log('Enviando lembrete:', reminder);
 
-      this.reminderService.addReminder(reminder).subscribe({
+      this.reminderService.addReminder(reminder as ReminderCreate).subscribe({
         next: () => {
           this.dialogRef.close(true);
         },
@@ -55,7 +67,6 @@ export class AddReminderDialogComponent {
   }
 
   cancel(): void {
-    this.dialogRef.close();
+    this.dialogRef.close(false);
   }
-
 }

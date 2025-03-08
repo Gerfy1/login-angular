@@ -10,6 +10,7 @@ import { takeUntil } from 'rxjs/operators';
 import { JobApplicationService } from '../../services/job-application.service';
 import { MatDialog } from '@angular/material/dialog';
 import { AddReminderDialogComponent } from '../add-reminder-dialog/add-reminder-dialog.component';
+import { isSameDay } from 'date-fns';
 
 @Component({
   selector: 'app-calendar',
@@ -23,6 +24,9 @@ export class CalendarComponent implements OnInit{
   CalendarView = CalendarView;
   viewDate: Date = new Date();
   events: CalendarEvent[] = [];
+  activeDayIsOpen: boolean = false;
+  clickedDate: Date | null = null;
+  refresh = new Subject<void>();
   private destroy$ = new Subject<void>();
 
   constructor(private reminderService: ReminderService, private dialog: MatDialog, private jobApplicationService: JobApplicationService) {}
@@ -43,6 +47,7 @@ export class CalendarComponent implements OnInit{
         console.log('Reminders recebidos:', reminders);
         this.events = reminders.map(reminder => this.mapReminderToEvent(reminder));
         console.log('Events mapeados para o calendário:', this.events);
+        this.refresh.next();
       });
   }
 
@@ -66,28 +71,47 @@ export class CalendarComponent implements OnInit{
     });
   }
 
-  dayClicked({date} : {date:Date}):void {
-    this.jobApplicationService.getJobApplications().subscribe(applications => {
-      if (applications.length === 0){
-        alert('Você precisa ter pelo menos uma candidatura registrada para adicionar um lembrete');
-        return;
-      }
-
-      const dialogRef = this.dialog.open(AddReminderDialogComponent, {
-        width: '400px',
-        data: {
-          jobApplication: applications[0],
-          date: date
-        }
-      });
-
-      dialogRef.afterClosed().subscribe(result => {
-        if (result) {
-          this.loadReminders();
-        }
-      });
-    });
+  dayClicked({ date, events }: { date: Date; events: CalendarEvent[] }): void {
+  if (
+    this.clickedDate &&
+    isSameDay(date, this.clickedDate) &&
+    this.activeDayIsOpen === true
+  ) {
+    this.activeDayIsOpen = false;
+    return;
   }
+
+  this.clickedDate = date;
+
+  if (events.length > 0) {
+    this.activeDayIsOpen = true;
+  } else {
+    this.openAddReminderDialogForDate(date);
+  }
+}
+
+openAddReminderDialogForDate(date: Date): void {
+  this.jobApplicationService.getJobApplications().subscribe(applications => {
+    if (applications.length === 0) {
+      alert('Você precisa ter pelo menos uma candidatura registrada para adicionar um lembrete');
+      return;
+    }
+
+    const dialogRef = this.dialog.open(AddReminderDialogComponent, {
+      width: '400px',
+      data: {
+        jobApplication: applications[0],
+        date: date
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.loadReminders();
+      }
+    });
+  });
+}
 
   private mapReminderToEvent(reminder: Reminder): CalendarEvent {
     let eventDate: Date;

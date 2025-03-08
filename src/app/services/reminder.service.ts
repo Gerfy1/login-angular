@@ -4,6 +4,7 @@ import { Observable, BehaviorSubject } from "rxjs";
 import { tap } from "rxjs";
 import { Reminder } from "../models/reminder.model";
 import { environment } from "../../environments/environment";
+import { ReminderCreate } from "../models/reminder-create.model";
 
 @Injectable({
   providedIn: 'root'
@@ -51,7 +52,7 @@ export class ReminderService {
     return this.http.get<Reminder>(`${this.apiUrl}/${id}`, { headers });
   }
 
-  addReminder(reminder: Reminder): Observable<Reminder> {
+  addReminder(reminder: ReminderCreate): Observable<Reminder> {
     const headers = this.getAuthHeaders();
     return this.http.post<Reminder>(this.apiUrl, reminder, { headers })
     .pipe(
