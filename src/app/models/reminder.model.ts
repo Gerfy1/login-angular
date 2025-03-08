@@ -4,7 +4,7 @@ export interface Reminder {
   description: string;
   date: Date;
   jobApplicationId: number;
-  isCompleted: boolean;
+  completed: boolean;
   color?:{
     primary: string;
     secondary: string;

@@ -52,7 +52,7 @@ export class CalendarComponent implements OnInit{
       }
       const dialogRef = this.dialog.open(AddReminderDialogComponent, {
         width: '400px',
-        data: { jobApplications: applications[0] }
+        data: { jobApplication: applications[0] }
       });
 
       dialogRef.afterClosed().subscribe(result => {
@@ -99,7 +99,7 @@ export class CalendarComponent implements OnInit{
       meta: {
         description: reminder.description,
         jobApplicationId: reminder.jobApplicationId,
-        isCompleted: reminder.isCompleted
+        isCompleted: reminder.completed
       }
     };
   }

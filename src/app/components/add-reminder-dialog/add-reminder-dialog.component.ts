@@ -37,7 +37,7 @@ export class AddReminderDialogComponent {
         title: this.reminderForm.value.title,
         description: this.reminderForm.value.description,
         date: new Date(this.reminderForm.value.date),
-        isCompleted: false,
+        completed: false,
         jobApplicationId: this.data.jobApplication.id as number
       };
 
