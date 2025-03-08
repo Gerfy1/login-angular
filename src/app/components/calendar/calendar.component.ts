@@ -7,6 +7,9 @@ import { ReminderService } from '../../services/reminder.service';
 import { Reminder } from '../../models/reminder.model';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { JobApplicationService } from '../../services/job-application.service';
+import { MatDialog } from '@angular/material/dialog';
+import { AddReminderDialogComponent } from '../add-reminder-dialog/add-reminder-dialog.component';
 
 @Component({
   selector: 'app-calendar',
@@ -22,7 +25,7 @@ export class CalendarComponent implements OnInit{
   events: CalendarEvent[] = [];
   private destroy$ = new Subject<void>();
 
-  constructor(private reminderService: ReminderService) {}
+  constructor(private reminderService: ReminderService, private dialog: MatDialog, private jobApplicationService: JobApplicationService) {}
 
   ngOnInit(): void {
     this.loadReminders();
@@ -35,9 +38,52 @@ export class CalendarComponent implements OnInit{
 
   loadReminders(): void {
     this.reminderService.getReminders()
-    .pipe(takeUntil(this.destroy$))
-    .subscribe(reminders => {
-      this.events = reminders.map(reminder => this.mapReminderToEvent(reminder));
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(reminders => {
+        this.events = reminders.map(reminder => this.mapReminderToEvent(reminder));
+      });
+  }
+
+  openAddReminderDialog(): void {
+    this.jobApplicationService.getJobApplications().subscribe(applications => {
+      if (applications.length === 0 ){
+        alert('Você precisa ter pelo menos uma candidatura registrada para adicionar um lembrete');
+        return;
+      }
+      const dialogRef = this.dialog.open(AddReminderDialogComponent, {
+        width: '400px',
+        data: { jobApplications: applications[0] }
+      });
+
+      dialogRef.afterClosed().subscribe(result => {
+        if(result){
+          this.loadReminders();
+        }
+      });
+
+    });
+  }
+
+  dayClicked({date} : {date:Date}):void {
+    this.jobApplicationService.getJobApplications().subscribe(applications => {
+      if (applications.length === 0){
+        alert('Você precisa ter pelo menos uma candidatura registrada para adicionar um lembrete');
+        return;
+      }
+
+      const dialogRef = this.dialog.open(AddReminderDialogComponent, {
+        width: '400px',
+        data: {
+          jobApplication: applications[0],
+          date: date
+        }
+      });
+
+      dialogRef.afterClosed().subscribe(result => {
+        if (result) {
+          this.loadReminders();
+        }
+      });
     });
   }
 

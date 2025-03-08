@@ -19,13 +19,15 @@ export class AddReminderDialogComponent {
     private fb: FormBuilder,
     private reminderService: ReminderService,
     private dialogRef: MatDialogRef<AddReminderDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: { jobApplication: JobApplication }
+    @Inject(MAT_DIALOG_DATA) public data: { jobApplication: JobApplication, date?: Date }
   )
   {
+    const presetDate = data.date ? data.date : null;
+
     this.reminderForm = this.fb.group({
       title: ['', Validators.required],
       description: [''],
-      date: ['', Validators.required]
+      date: [presetDate, Validators.required]
     });
   }
 

@@ -1,6 +1,9 @@
 <div class="card">
   <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
     <h3 class="mb-0">Calendário de Lembretes</h3>
+    <button class="btn btn-light me-3" (click)="openAddReminderDialog()">
+      <i class="fas fa-plus"></i> Novo Lembrete
+    </button>
     <div class="btn-group">
       <button
         class="btn btn-sm"
@@ -47,6 +50,7 @@
         [viewDate]="viewDate"
         [events]="events"
         [activeDayIsOpen]="true"
+        (dayClicked)="dayClicked($event.day)"
         (eventClicked)="handleEventClick($event.event)">
       </mwl-calendar-month-view>
       <mwl-calendar-week-view
