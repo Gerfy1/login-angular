@@ -20,7 +20,7 @@ export class CalendarComponent implements OnInit{
   CalendarView = CalendarView;
   viewDate: Date = new Date();
   events: CalendarEvent[] = [];
-  private destroy$ = new Subject();
+  private destroy$ = new Subject<void>();
 
   constructor(private reminderService: ReminderService) {}
 

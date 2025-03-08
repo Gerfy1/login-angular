@@ -10,9 +10,12 @@ import { environment } from "../../environments/environment";
 })
 
 export class ReminderService {
+
   private apiUrl = `${environment.apiUrl}/reminders`;
   private remindersSubject = new BehaviorSubject<Reminder[]>([]);
   private reminders: Reminder[] = [];
+
+  public reminders$ = this.remindersSubject.asObservable();
 
   constructor (private http: HttpClient) {
     this.loadReminders();
@@ -68,7 +71,7 @@ export class ReminderService {
 
   updateReminder(id: number, reminder: Reminder): Observable<Reminder> {
     const headers = this.getAuthHeaders();
-    return this.http.put<Reminder>(`$this.apiUrl}/${id}`, reminder, { headers })
+    return this.http.put<Reminder>(`${this.apiUrl}/$`, reminder, { headers })
     .pipe(
       tap(updatedReminder => {
         const currentReminders = this.remindersSubject.value;
