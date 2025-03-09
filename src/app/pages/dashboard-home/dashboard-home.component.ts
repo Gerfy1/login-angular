@@ -94,8 +94,8 @@ export class DashboardHomeComponent implements OnInit, AfterViewInit {
 
   updateStatusChart(applications: any[]): void {
     const pendingCount = applications.filter(app => app.status === 'Pendente').length;
-    const interviewCount = applications.filter(app => app.status === 'Entrevista').length;
-    const approvedCount = applications.filter(app => app.status === 'Aprovado').length;
+    const interviewCount = applications.filter(app => app.status === 'Em andamento').length;
+    const approvedCount = applications.filter(app => app.status === 'Aceito').length;
     const rejectedCount = applications.filter(app => app.status === 'Rejeitado').length;
 
     this.statusChartData.datasets[0].data = [
@@ -137,9 +137,9 @@ export class DashboardHomeComponent implements OnInit, AfterViewInit {
       .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
       .slice(0, 5);
       this.activeApplications = applications.filter(app =>
-        !['Rejeitado', 'Aprovado'].includes(app.status)).length;
+        !['Rejeitado', 'Aceito'].includes(app.status)).length;
         this.interviewCount = applications.filter(app =>
-          app.status === 'Entrevista' || app.stage?.includes('Entrevista')).length;
+          app.status === 'Em andamento' || app.stage?.includes('Em andamento')).length;
           this.offerCount = applications.filter(app => app.status === 'Aceito').length;
       this.responseRate = this.totalApplications ?
         Math.round((this.totalApplications - applications.filter (app => app.status === 'Pendente').length) / this.totalApplications *100) : 0;
