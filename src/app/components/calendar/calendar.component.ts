@@ -10,7 +10,7 @@ import { takeUntil } from 'rxjs/operators';
 import { JobApplicationService } from '../../services/job-application.service';
 import { MatDialog } from '@angular/material/dialog';
 import { AddReminderDialogComponent } from '../add-reminder-dialog/add-reminder-dialog.component';
-import { isSameDay } from 'date-fns';
+import { isSameDay,isSameMonth } from 'date-fns';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ReminderDetailsDialogComponent } from '../reminder-details-dialog/reminder-details-dialog.component';
 import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
@@ -56,6 +56,24 @@ export class CalendarComponent implements OnInit, OnDestroy{
     this.destroy$.complete();
   }
 
+  dayClicked({ date, events }: { date: Date; events: CalendarEvent[] }): void {
+    if (isSameMonth(date, this.viewDate)) {
+      if (
+        (isSameDay(this.viewDate, date) && this.activeDayIsOpen) ||
+        events.length === 0
+      ) {
+        this.activeDayIsOpen = false;
+
+        if (events.length === 0) {
+          this.openAddReminderDialogForDate(date);
+        }
+      } else {
+        this.activeDayIsOpen = true;
+        this.viewDate = date;
+      }
+    }
+  }
+
   loadReminders(): void {
     this.reminderService.getReminders()
       .pipe(takeUntil(this.destroy$))
@@ -68,19 +86,25 @@ export class CalendarComponent implements OnInit, OnDestroy{
   }
 
   openAddReminderDialog(): void {
-      this.jobApplicationService.getJobApplications().subscribe(applications => {
-        if (applications.length === 0) {
-          this.snackBar.open('Você precisa ter pelo menos uma candidatura registrada para adicionar um lembrete', 'OK', {
-            duration: 5000,
-            horizontalPosition: 'center',
-            verticalPosition: 'bottom',
-            panelClass: ['warning-snackbar']
-          });
-          return;
+    this.jobApplicationService.getJobApplications().subscribe(applications => {
+      if (applications.length === 0) {
+        this.snackBar.open('Você precisa ter pelo menos uma candidatura registrada para adicionar um lembrete', 'OK', {
+          duration: 5000,
+          horizontalPosition: 'center',
+          verticalPosition: 'bottom',
+          panelClass: ['warning-snackbar']
+        });
+        return;
       }
+
       const dialogRef = this.dialog.open(AddReminderDialogComponent, {
         width: '400px',
-        data: { jobApplication: applications[0] }
+        data: {
+          date: new Date(),
+          jobApplications: applications,
+          requireJobSelection: true,
+          isEditing: false
+        }
       });
 
       dialogRef.afterClosed().subscribe(result => {
@@ -88,56 +112,43 @@ export class CalendarComponent implements OnInit, OnDestroy{
           this.loadReminders();
         }
       });
-
     });
   }
 
-  dayClicked({ date, events }: { date: Date; events: CalendarEvent[] }): void {
-  if (
-    this.clickedDate &&
-    isSameDay(date, this.clickedDate) &&
-    this.activeDayIsOpen === true
-  ) {
-    this.activeDayIsOpen = false;
-    return;
-  }
+  openAddReminderDialogForDate(date: Date): void {
+    this.jobApplicationService.getJobApplications().subscribe({
+      next: (applications) => {
+        if (applications.length === 0) {
+          this.snackBar.open('Você precisa ter pelo menos uma candidatura registrada para adicionar um lembrete', 'OK', {
+            duration: 5000
+          });
+          return;
+        }
 
-  this.clickedDate = date;
+        const dialogRef = this.dialog.open(AddReminderDialogComponent, {
+          width: '400px',
+          data: {
+            date: date,
+            jobApplications: applications,
+            requireJobSelection: true,
+            isEditing: false
+          }
+        });
 
-  if (events.length > 0) {
-    this.activeDayIsOpen = true;
-  } else {
-    this.openAddReminderDialogForDate(date);
-  }
-}
-
-openAddReminderDialogForDate(date: Date): void {
-  this.jobApplicationService.getJobApplications().subscribe(applications => {
-    if (applications.length === 0) {
-      this.snackBar.open('Você precisa ter pelo menos uma candidatura registrada para adicionar um lembrete', 'OK', {
-        duration: 5000,
-        horizontalPosition: 'center',
-        verticalPosition: 'bottom',
-        panelClass: ['warning-snackbar']
-      });
-      return;
-    }
-
-    const dialogRef = this.dialog.open(AddReminderDialogComponent, {
-      width: '400px',
-      data: {
-        jobApplication: applications[0],
-        date: date
+        dialogRef.afterClosed().subscribe(result => {
+          if (result) {
+            this.loadReminders();
+          }
+        });
+      },
+      error: (error) => {
+        console.error('Erro ao carregar candidaturas:', error);
+        this.snackBar.open('Erro ao carregar candidaturas. Por favor, tente novamente.', 'OK', {
+          duration: 5000
+        });
       }
     });
-
-    dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        this.loadReminders();
-      }
-    });
-  });
-}
+  }
 
   private mapReminderToEvent(reminder: Reminder): CalendarEvent {
     let eventDate: Date;

@@ -1,82 +1,99 @@
 import { Injectable } from "@angular/core";
 import { BehaviorSubject, Observable } from "rxjs";
 import { Notification } from "../models/notification.model";
+import { ToastrService } from "ngx-toastr";
 
 @Injectable({
-  providedIn: 'root' })
+  providedIn: 'root'
+})
 
 export class NotificationService {
-  private notifications: Notification [] = [];
+  private notifications: Notification[] = [];
   private notifySubscribers(): void {
     this.notificationSubject.next([...this.notifications]);
   }
   private notificationSubject = new BehaviorSubject<Notification[]>([]);
 
-  constructor (){
+  constructor(private toastr: ToastrService) {
     this.loadNotificationsFromStorage();
   }
 
- getNotification(): Notification[]{
-  return this.notifications;
- }
+  showWarning(message: string, title: string = 'Aviso'): void {
+    this.toastr.warning(message, title);
+  }
 
- getNotificationsObservable(): Observable<Notification[]>{
+  showSuccess(message: string, title: string = 'Sucesso'): void {
+    this.toastr.success(message, title);
+  }
+  showError(message: string, title: string = 'Erro'): void {
+    this.toastr.error(message, title);
+  }
+
+  showInfo(message: string, title: string = 'Informação'): void {
+    this.toastr.info(message, title);
+  }
+
+  getNotification(): Notification[] {
+    return this.notifications;
+  }
+
+  getNotificationsObservable(): Observable<Notification[]> {
     return this.notificationSubject.asObservable();
- }
+  }
 
- addNotification(message: string, type: 'reminder' | 'info' | 'job' | 'system', relatedId?: number ) : void {
-  const notification: Notification = {
-    id: Date.now(),
-    message,
-    type,
-    createdAt: new Date(),
-    read: false,
-    relatedId
-  };
+  addNotification(message: string, type: 'reminder' | 'info' | 'job' | 'system', relatedId?: number): void {
+    const notification: Notification = {
+      id: Date.now(),
+      message,
+      type,
+      createdAt: new Date(),
+      read: false,
+      relatedId
+    };
 
-  this.notifications.unshift(notification);
-  this.saveNotificationsToStorage();
-  this.notifySubscribers();
- }
-
- markAsRead(id: number): void{
-  const notification = this.notifications.find(n => n.id === id);
-  if(notification){
-    notification.read = true;
+    this.notifications.unshift(notification);
     this.saveNotificationsToStorage();
     this.notifySubscribers();
   }
-}
 
-markAllAsRead(): void{
-  this.notifications.forEach(n => n.read = true);
-  this.saveNotificationsToStorage();
-  this.notifySubscribers();
-}
+  markAsRead(id: number): void {
+    const notification = this.notifications.find(n => n.id === id);
+    if (notification) {
+      notification.read = true;
+      this.saveNotificationsToStorage();
+      this.notifySubscribers();
+    }
+  }
 
-clearNotifications(): void{
-  this.notifications = [];
-  this.saveNotificationsToStorage();
-  this.notifySubscribers();
-}
-
-removeNotification(id: number): void{
-  this.notifications = this.notifications.filter(n => n.id !== id);
-  this.saveNotificationsToStorage();
-  this.notifySubscribers();
-}
-private saveNotificationsToStorage(): void{
-  localStorage.setItem('notifications', JSON.stringify(this.notifications));
-}
-
-private loadNotificationsFromStorage(): void {
-  const savedNotifications = localStorage.getItem('notifications');
-  if (savedNotifications) {
-    this.notifications = JSON.parse(savedNotifications);
-    this.notifications.forEach(n => {
-      n.createdAt = new Date(n.createdAt);
-    });
+  markAllAsRead(): void {
+    this.notifications.forEach(n => n.read = true);
+    this.saveNotificationsToStorage();
     this.notifySubscribers();
   }
-}
+
+  clearNotifications(): void {
+    this.notifications = [];
+    this.saveNotificationsToStorage();
+    this.notifySubscribers();
+  }
+
+  removeNotification(id: number): void {
+    this.notifications = this.notifications.filter(n => n.id !== id);
+    this.saveNotificationsToStorage();
+    this.notifySubscribers();
+  }
+  private saveNotificationsToStorage(): void {
+    localStorage.setItem('notifications', JSON.stringify(this.notifications));
+  }
+
+  private loadNotificationsFromStorage(): void {
+    const savedNotifications = localStorage.getItem('notifications');
+    if (savedNotifications) {
+      this.notifications = JSON.parse(savedNotifications);
+      this.notifications.forEach(n => {
+        n.createdAt = new Date(n.createdAt);
+      });
+      this.notifySubscribers();
+    }
+  }
 }

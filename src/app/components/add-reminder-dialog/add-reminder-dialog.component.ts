@@ -25,19 +25,18 @@ export class AddReminderDialogComponent implements OnInit {
     private reminderService: ReminderService,
     private snackBar: MatSnackBar,
     private dialogRef: MatDialogRef<AddReminderDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: { jobApplication?: JobApplication, date?: Date, reminder?: Reminder, isEditing: boolean }
-  ) {}
+    @Inject(MAT_DIALOG_DATA) public data: { jobApplication?: JobApplication, date?: Date, reminder?: Reminder, isEditing: boolean, jobApplications?: JobApplication[], requireJobSelection?: boolean }
+  ) { }
 
   ngOnInit(): void {
     this.initializeForm();
   }
 
-
   initializeForm(): void {
     const reminder = this.data.isEditing ? this.data.reminder : null;
     const presetDate = reminder ? new Date(reminder.date) :
-                      this.data.date ? this.data.date :
-                      new Date();
+      this.data.date ? this.data.date :
+        new Date();
 
     this.isEditing = this.data.isEditing || false;
     if (reminder) {
@@ -48,15 +47,25 @@ export class AddReminderDialogComponent implements OnInit {
     const formConfig: any = {
       title: [reminder?.title || '', Validators.required],
       description: [reminder?.description || ''],
-      date: [this.formatDateForInput(presetDate), Validators.required]
+      date: [this.formatDateForInput(presetDate), Validators.required],
+      jobApplicationId: ['', Validators.required]
     };
 
 
-    if (this.data.isEditing) {
-      formConfig.completed = [reminder?.completed || false];
-    }
-
     this.reminderForm = this.fb.group(formConfig);
+
+
+    if (reminder?.jobApplicationId) {
+      this.reminderForm.get('jobApplicationId')?.setValue(reminder.jobApplicationId);
+    } else if (this.data.jobApplication?.id) {
+      this.reminderForm.get('jobApplicationId')?.setValue(this.data.jobApplication.id);
+    } else if (this.data.jobApplications && this.data.jobApplications.length > 0) {
+
+      this.reminderForm.get('jobApplicationId')?.setValue(this.data.jobApplications[0].id);
+
+
+      console.log('Definindo jobApplicationId padrão:', this.data.jobApplications[0].id);
+    }
   }
 
   formatDateForInput(date: string | Date): string {
@@ -67,52 +76,41 @@ export class AddReminderDialogComponent implements OnInit {
 
   onSubmit(): void {
     if (this.reminderForm.valid) {
-      const formValues = this.reminderForm.value;
+      const formData = this.reminderForm.value;
 
+      let reminderDate: Date;
+      if (formData.date instanceof Date) {
+        reminderDate = formData.date;
+      } else {
+        reminderDate = new Date(formData.date);
+      }
 
-      const reminderData: any = {
-        title: formValues.title,
-        description: formValues.description,
-        date: new Date(formValues.date).toISOString()
+      const jobApplicationId = this.reminderForm.get('jobApplicationId')?.value;
+
+      const reminderData = {
+        title: formData.title,
+        description: formData.description || '',
+        date: reminderDate.toISOString(),
+        jobApplicationId: jobApplicationId,
+        completed: false
       };
 
+      console.log('Enviando lembrete:', reminderData);
 
-      if (this.data.jobApplication && this.data.jobApplication.id) {
-        reminderData.jobApplicationId = this.data.jobApplication.id;
-      } else if (this.data.reminder?.jobApplicationId) {
-        reminderData.jobApplicationId = this.data.reminder.jobApplicationId;
-      }
-
-
-      if (this.data.isEditing && formValues.completed !== undefined) {
-        reminderData.completed = formValues.completed;
-      }
-
-      if (this.data.isEditing && this.data.reminder && typeof this.data.reminder.id === 'number') {
-        this.reminderService.updateReminder(this.data.reminder.id, reminderData)
-          .subscribe({
-            next: () => {
-              this.snackBar.open('Lembrete atualizado com sucesso', 'Fechar', { duration: 3000 });
-              this.dialogRef.close(true);
-            },
-            error: (err) => {
-              console.error('Erro ao atualizar lembrete:', err);
-              this.snackBar.open('Erro ao atualizar lembrete', 'OK', { duration: 3000 });
-            }
+      this.reminderService.addReminder(reminderData).subscribe({
+        next: (response) => {
+          this.snackBar.open('Lembrete criado com sucesso!', 'Fechar', {
+            duration: 3000
           });
-      } else {
-        this.reminderService.addReminder(reminderData)
-          .subscribe({
-            next: () => {
-              this.snackBar.open('Lembrete criado com sucesso', 'Fechar', { duration: 3000 });
-              this.dialogRef.close(true);
-            },
-            error: (err) => {
-              console.error('Erro ao criar lembrete:', err);
-              this.snackBar.open('Erro ao criar lembrete', 'OK', { duration: 3000 });
-            }
+          this.dialogRef.close(true);
+        },
+        error: (error) => {
+          console.error('Erro ao criar lembrete:', error);
+          this.snackBar.open('Erro ao criar lembrete. Por favor, tente novamente.', 'Fechar', {
+            duration: 5000
           });
-      }
+        }
+      });
     }
   }
 

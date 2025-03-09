@@ -11,7 +11,10 @@
     <li *ngFor="let application of filteredApplications" class="list-group-item">
       <div class="mb-3">
         <h5 class="text-break">{{ application.jobName }}</h5>
-        <p class="text-break">{{ application.jobDescription }}</p>
+        <div class="job-description mb-2">
+          <p class="mb-1 fw-bold text-secondary">Empresa/Descrição:</p>
+          <p class="text-break text-muted ps-2 border-start border-2">{{ application.jobDescription || 'Sem descrição disponível' }}</p>
+        </div>
         <p *ngIf="application.date">{{ application.date | date }}</p>
         <p><strong>Status:</strong> {{ application.status }}</p>
       </div>

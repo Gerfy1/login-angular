@@ -32,6 +32,18 @@
       <input type="checkbox" id="completed" formControlName="completed" class="form-check-input">
       <label for="completed" class="form-check-label">Marcar como concluído</label>
     </div>
+    <div *ngIf="data.requireJobSelection || (!data.jobApplication && !data.reminder?.jobApplicationId)" class="mb-3">
+      <label for="jobApplication" class="form-label">Candidatura</label>
+      <select class="form-select" id="jobApplication" formControlName="jobApplicationId">
+        <option *ngFor="let app of data.jobApplications" [value]="app.id">
+          {{ app.jobName }}
+        </option>
+      </select>
+      <div *ngIf="reminderForm.get('jobApplicationId')?.invalid && reminderForm.get('jobApplicationId')?.touched"
+           class="text-danger">
+        Por favor, selecione uma candidatura.
+      </div>
+    </div>
 
     <div class="d-flex justify-content-end gap-2">
       <button type="button" class="btn btn-outline-secondary" (click)="cancel()">Cancelar</button>

@@ -49,7 +49,11 @@ export class JobAplicationListComponent implements OnInit{
     this.jobApplicationService.getJobApplications().subscribe(
       (applications) => {
         console.log('Job applications loaded:', applications);
-        this.jobApplications = applications;
+        this.jobApplications = applications.sort((a, b) => {
+          const dateA = new Date(a.date).getTime();
+          const dateB = new Date(b.date).getTime();
+          return dateB - dateA;
+        });
         this.applyFilter();
       },
       (error) => {

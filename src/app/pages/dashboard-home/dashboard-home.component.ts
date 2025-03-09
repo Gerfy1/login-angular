@@ -231,9 +231,19 @@ export class DashboardHomeComponent implements OnInit, AfterViewInit {
  }
 
  addReminder(): void {
+  if (this.latestApplications.length === 0) {
+    this.notificationService.showWarning('Você precisa ter pelo menos uma candidatura para adicionar um lembrete.');
+    return;
+  }
+
   const dialogRef = this.dialog.open(AddReminderDialogComponent, {
     width: '400px',
-    data: { date: new Date() }
+    data: {
+      date: new Date(),
+      jobApplications: this.latestApplications,
+      requireJobSelection: true,
+      isEditing: false
+    }
   });
 
   dialogRef.afterClosed().subscribe(result => {
