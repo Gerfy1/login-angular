@@ -41,7 +41,6 @@ export class JobApplicationFormComponent implements OnInit {
 
 
   onSubmit(): void {
-    console.log('Form submitted');
     const userId = sessionStorage.getItem('user-id');
     const username = sessionStorage.getItem('username');
     if (userId && username) {
@@ -66,7 +65,6 @@ export class JobApplicationFormComponent implements OnInit {
         this.jobApplicationService.addJobApplication(newApplication).subscribe({
           next: (response) => {
             console.log('Job application created successfully', response);
-
             if (reminderValue && response && response.id) {
               const reminderData = {
                 title: `Lembrete para ${formValues.jobName}`,
@@ -78,7 +76,7 @@ export class JobApplicationFormComponent implements OnInit {
 
               this.reminderService.addReminder(reminderData).subscribe({
                 next: (reminderResponse) => {
-                  console.log('Reminder created successfully', reminderResponse);
+                  console.log('Lembrete criado', reminderResponse);
                 },
                 error: (reminderError) => {
                   console.error('Error creating reminder', reminderError);
@@ -88,15 +86,15 @@ export class JobApplicationFormComponent implements OnInit {
             this.jobApplicationForm.reset({ status: 'Pendente' });
           },
           error: (error) => {
-            console.error('Error creating job application', error);
+            console.error('Erro ao criar:', error);
           }
         });
       } else {
-        console.log('Form is invalid');
+        console.log('Formulario invalido');
         this.logFormErrors();
       }
     } else {
-      console.error('User ID or username is missing');
+      console.error('User ID ou username faltando');
     }
   }
 

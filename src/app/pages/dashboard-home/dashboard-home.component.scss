@@ -1,30 +1,13 @@
-.dashboard-home {
-  .card{
-    margin-bottom: 20px;
-    position: relative;
-    z-index: -1;
-  }
-  .row{
-    z-index: -1;
-  }
+.card-header, .card-body {
+  position: relative;
+}
 
-  .col-12{
-    margin-top: 10px;
-  }
+a.btn, button.btn {
+  position: relative;
+  z-index: 10;
+  cursor: pointer !important;
+}
 
-
-.small-calendar{
-  mwl-calendar-month-view {
-    height: 100px;
-    .cal-header{
-      font-size: 0.8rem;
-    }
-    .cal-cell-top{
-      font-size: 0.7rem;
-    }
-    .cal-events{
-      font-size: 0.7rem;
-    }
-   }
-  }
+.dashboard-home * {
+  pointer-events: auto;
 }
