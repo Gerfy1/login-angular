@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { LoadingService } from './services/loading.service';
 import {NgxSpinnerService} from 'ngx-spinner';
@@ -16,7 +16,7 @@ import { CommonModule } from '@angular/common';
 export class AppComponent implements OnInit {
   constructor(
     private spinner: NgxSpinnerService,
-    private loadingService: LoadingService
+    private loadingService: LoadingService,
   ) {}
 
   ngOnInit() {

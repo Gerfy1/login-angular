@@ -1,6 +1,10 @@
 <div class="p-3">
-  <h2 class="mb-3">Adicionar Lembrete</h2>
-  <p class="mb-3">Vaga: <strong>{{ data.jobApplication.jobName }}</strong></p>
+  <h2 *ngIf="data?.isEditing" class="mb-3">
+    Editar Lembrete {{ data?.jobApplication?.jobName ? 'para ' + data?.jobApplication?.jobName : '' }}
+  </h2>
+  <h2 *ngIf="!data?.isEditing" class="mb-3">
+    Novo Lembrete {{ data?.jobApplication?.jobName ? 'para ' + data?.jobApplication?.jobName : '' }}
+  </h2>
 
   <form [formGroup]="reminderForm" (ngSubmit)="onSubmit()">
     <div class="mb-3">
@@ -24,9 +28,16 @@
       </div>
     </div>
 
+    <div class="mb-3 form-check" *ngIf="data.isEditing && reminderForm.get('completed')">
+      <input type="checkbox" id="completed" formControlName="completed" class="form-check-input">
+      <label for="completed" class="form-check-label">Marcar como concluído</label>
+    </div>
+
     <div class="d-flex justify-content-end gap-2">
       <button type="button" class="btn btn-outline-secondary" (click)="cancel()">Cancelar</button>
-      <button type="submit" class="btn btn-primary" [disabled]="reminderForm.invalid">Salvar</button>
+      <button type="submit" class="btn btn-primary" [disabled]="reminderForm.invalid">
+        {{ data.isEditing ? 'Atualizar' : 'Salvar' }}
+      </button>
     </div>
   </form>
 </div>

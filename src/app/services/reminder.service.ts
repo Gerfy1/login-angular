@@ -79,6 +79,7 @@ export class ReminderService {
   }
 
   updateReminder(id: number, reminder: ReminderCreate): Observable<Reminder> {
+    const headers = this.getAuthHeaders();
     return this.http.put<Reminder>(`${this.apiUrl}/${id}`, reminder).pipe(
       tap(updatedReminder => {
         this.notificationService.addNotification(

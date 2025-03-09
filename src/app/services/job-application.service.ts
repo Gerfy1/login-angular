@@ -17,22 +17,17 @@ export class JobApplicationService {
 
   private getAuthHeaders(): HttpHeaders {
     const token = sessionStorage.getItem('auth-token');
-    console.log('Raw token from session:', token);
 
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${token}`
     });
 
-    console.log('Using token for Authorization:', token);
-    console.log('Headers created:', headers);
     return headers;
   }
 
   getJobApplications(): Observable<JobApplication[]> {
-    console.log('Fetching job applications from:', this.apiUrl);
     const headers = this.getAuthHeaders();
-    console.log('Headers:', headers);
     return this.http.get<JobApplication[]>(this.apiUrl, { headers });
   }
   getJobApplication(id: number): Observable<JobApplication> {
@@ -45,11 +40,9 @@ export class JobApplicationService {
   }
 
   addJobApplication(jobApplication: JobApplication): Observable<JobApplication> {
+    const headers = this.getAuthHeaders();
     const userId = sessionStorage.getItem('user-id');
     jobApplication.user = { id: Number(userId) };
-    const headers = this.getAuthHeaders();
-    console.log('Adding job application:', jobApplication);
-    console.log('Headers:', headers);
     return this.http.post<JobApplication>(this.apiUrl, jobApplication, { headers })
     .pipe(
       tap(newJobApplication => {

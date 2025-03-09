@@ -186,13 +186,11 @@ openAddReminderDialogForDate(date: Date): void {
   }
   editReminder(event: CalendarEvent): void {
     const reminderId = event.id as number;
-
     this.reminderService.getReminderById(reminderId).subscribe(reminder => {
-      this.jobApplicationService.getJobApplication(reminder.jobApplicationId).subscribe(jobApplication => {
+      if (!reminder.jobApplicationId) {
         const dialogRef = this.dialog.open(AddReminderDialogComponent, {
           width: '400px',
           data: {
-            jobApplication,
             reminder,
             isEditing: true
           }
@@ -203,7 +201,42 @@ openAddReminderDialogForDate(date: Date): void {
             this.loadReminders();
           }
         });
-      });
+      } else {
+        this.jobApplicationService.getJobApplication(reminder.jobApplicationId).subscribe({
+          next: (jobApplication) => {
+            const dialogRef = this.dialog.open(AddReminderDialogComponent, {
+              width: '400px',
+              data: {
+                jobApplication,
+                reminder,
+                isEditing: true
+              }
+            });
+
+            dialogRef.afterClosed().subscribe(result => {
+              if (result) {
+                this.loadReminders();
+              }
+            });
+          },
+          error: (error) => {
+            console.error('Erro ao buscar jobApplication:', error);
+            const dialogRef = this.dialog.open(AddReminderDialogComponent, {
+              width: '400px',
+              data: {
+                reminder,
+                isEditing: true
+              }
+            });
+
+            dialogRef.afterClosed().subscribe(result => {
+              if (result) {
+                this.loadReminders();
+              }
+            });
+          }
+        });
+      }
     });
   }
 

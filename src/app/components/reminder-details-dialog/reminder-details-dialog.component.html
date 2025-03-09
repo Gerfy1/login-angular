@@ -13,9 +13,15 @@
     </div>
   </mat-dialog-content>
 
-  <mat-dialog-actions class="justify-content-end">
-    <button mat-button (click)="close()">Fechar</button>
-    <button mat-button color="primary" (click)="edit()">Editar</button>
-    <button mat-button color="warn" (click)="delete()">Excluir</button>
+  <mat-dialog-actions class="d-flex justify-content-end gap-2 mt-3">
+    <button class="btn btn-outline-secondary" (click)="close()">
+      <i class="bi bi-x-circle me-1"></i>Fechar
+    </button>
+    <button class="btn btn-primary" (click)="edit()">
+      <i class="bi bi-pencil-square me-1"></i>Editar
+    </button>
+    <button class="btn btn-danger" (click)="delete()">
+      <i class="bi bi-trash me-1"></i>Excluir
+    </button>
   </mat-dialog-actions>
 </div>
