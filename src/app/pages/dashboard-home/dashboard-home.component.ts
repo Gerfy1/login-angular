@@ -133,10 +133,14 @@ export class DashboardHomeComponent implements OnInit, AfterViewInit {
   loadDashboardData(): void {
     this.jobApplicationService.getJobApplications().subscribe(applications => {
       this.totalApplications = applications.length;
-      this.latestApplications = applications.slice(0, 5);
-      this.activeApplications = applications.filter(app => !['Rejeitado', 'Aprovado'].includes(app.status)).length;
-      this.interviewCount = applications.filter(app => app.status === 'Entrevista' || app.stage?.includes('Entrevista')).length;
-      this.offerCount = applications.filter(app => app.status === 'Aprovado').length;
+      this.latestApplications = applications
+      .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+      .slice(0, 5);
+      this.activeApplications = applications.filter(app =>
+        !['Rejeitado', 'Aprovado'].includes(app.status)).length;
+        this.interviewCount = applications.filter(app =>
+          app.status === 'Entrevista' || app.stage?.includes('Entrevista')).length;
+          this.offerCount = applications.filter(app => app.status === 'Aceito').length;
       this.responseRate = this.totalApplications ?
         Math.round((this.totalApplications - applications.filter (app => app.status === 'Pendente').length) / this.totalApplications *100) : 0;
       this.interviewRate = this.totalApplications ?
