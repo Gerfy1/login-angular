@@ -6,7 +6,6 @@ import { ToastrService } from 'ngx-toastr';
 import { catchError } from 'rxjs/operators';
 import { throwError } from 'rxjs';
 import { Router } from '@angular/router';
-import { environment } from '../../environments/environment.prod';
 
 interface TokenWithAccessToken {
   accessToken: string;
@@ -27,7 +26,7 @@ export class LoginService {
 
 
 
-  private baseUrl = '/api/auth';
+  private baseUrl = 'https://jobsmemory.onrender.com/api/auth';
 
   constructor(private httpClient: HttpClient, private router: Router) { }
 
@@ -38,7 +37,7 @@ export class LoginService {
         console.log('Token type:', typeof value.token);
 
         if (typeof value.token === 'object' && value.token !== null) {
-          const tokenObj = value.token as any; // Use any para evitar erros de tipo
+          const tokenObj = value.token as any;
 
           if ('accessToken' in tokenObj) {
             sessionStorage.setItem("auth-token", tokenObj.accessToken);
