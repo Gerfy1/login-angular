@@ -6,7 +6,7 @@ import { ToastrService } from 'ngx-toastr';
 import { catchError } from 'rxjs/operators';
 import { throwError } from 'rxjs';
 import { Router } from '@angular/router';
-
+import { environment } from '../../environments/environment.prod';
 
 interface TokenWithAccessToken {
   accessToken: string;
@@ -27,7 +27,7 @@ export class LoginService {
 
 
 
-  private baseUrl = "http://localhost:81/api/auth"
+  private baseUrl = environment.apiUrl+'/auth/login';
 
   constructor(private httpClient: HttpClient, private router: Router) { }
 
