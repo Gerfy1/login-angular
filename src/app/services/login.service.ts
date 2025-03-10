@@ -27,12 +27,12 @@ export class LoginService {
 
 
 
-  private baseUrl = environment.apiUrl+'/auth';
+  private baseUrl = environment.apiUrl;
 
   constructor(private httpClient: HttpClient, private router: Router) { }
 
   login(username: string, password: string){
-    return this.httpClient.post<LoginResponse>(`${this.baseUrl}/auth/login`, { username, password }).pipe(
+    return this.httpClient.post<LoginResponse>(`${this.baseUrl}/login`, { username, password }).pipe(
       tap((value) => {
         console.log('Login response:', value);
         console.log('Token type:', typeof value.token);
@@ -68,7 +68,7 @@ export class LoginService {
   }
 
   register(username: string, password: string){
-    return this.httpClient.post(`${this.baseUrl}/auth/register`, { username, password }, { observe: 'response' }).pipe(
+    return this.httpClient.post(`${this.baseUrl}/register`, { username, password }, { observe: 'response' }).pipe(
       tap((response) => {
         if (response.status === 201) {
           console.log('Register response:', response.body);
