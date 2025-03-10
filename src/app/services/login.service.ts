@@ -75,6 +75,12 @@ export class LoginService {
         }
       }),
       catchError((error) => {
+        console.error('Login error details:', error);
+        console.error('Error status:', error.status);
+        console.error('Error body:', error.error);
+        if (error.error && error.error.message) {
+          console.error('Server error message:', error.error.message);
+        }
         return throwError(error);
       })
     );
