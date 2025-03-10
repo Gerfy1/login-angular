@@ -2,6 +2,8 @@ import { Injectable } from "@angular/core";
 import { BehaviorSubject, Observable } from "rxjs";
 import { Notification } from "../models/notification.model";
 import { ToastrService } from "ngx-toastr";
+import { Overlay, OverlayConfig, OverlayRef } from '@angular/cdk/overlay';
+
 
 @Injectable({
   providedIn: 'root'
@@ -9,6 +11,8 @@ import { ToastrService } from "ngx-toastr";
 
 export class NotificationService {
   private notifications: Notification[] = [];
+  private notificationsVisible = new BehaviorSubject<boolean>(false);
+public notificationsVisible$ = this.notificationsVisible.asObservable();
   private notifySubscribers(): void {
     this.notificationSubject.next([...this.notifications]);
   }
@@ -18,6 +22,16 @@ export class NotificationService {
     this.loadNotificationsFromStorage();
   }
 
+
+  // Método para exibir/ocultar notificações
+toggleNotifications(): void {
+  this.notificationsVisible.next(!this.notificationsVisible.value);
+}
+
+// Método para fechar notificações
+hideNotifications(): void {
+  this.notificationsVisible.next(false);
+}
   showWarning(message: string, title: string = 'Aviso'): void {
     this.toastr.warning(message, title);
   }
@@ -60,8 +74,8 @@ export class NotificationService {
     const notification = this.notifications.find(n => n.id === id);
     if (notification) {
       notification.read = true;
-      this.saveNotificationsToStorage();
       this.notifySubscribers();
+      this.saveNotificationsToStorage();
     }
   }
 
