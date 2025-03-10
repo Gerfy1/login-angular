@@ -1,7 +1,7 @@
 {
   "version": 2,
   "rewrites": [
-    { "source": "/api/:path*", "destination": "https://jobsmemory.onrender.com/:path*" },
+    { "source": "/api/:path*", "destination": "https://jobsmemory.onrender.com/api/:path*" },
     { "source": "/assets/(.*)", "destination": "/assets/$1" },
     { "source": "/(.*)\\.(js|css|ico|jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|ani)", "destination": "/$1.$2" },
     { "source": "/(.*)", "destination": "/index.html" }

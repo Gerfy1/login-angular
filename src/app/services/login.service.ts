@@ -27,7 +27,7 @@ export class LoginService {
 
 
 
-  private baseUrl = environment.apiUrl;
+  private baseUrl = '/api/auth';
 
   constructor(private httpClient: HttpClient, private router: Router) { }
 
