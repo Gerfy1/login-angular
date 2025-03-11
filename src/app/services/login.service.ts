@@ -28,37 +28,24 @@ export class LoginService {
   constructor(private httpClient: HttpClient, private router: Router) { }
 
   login(username: string, password: string){
+    console.log('Tentando login com:', { username, password: '***' });
+
     return this.httpClient.post<LoginResponse>(`${this.baseUrl}/login`, { username, password }).pipe(
       tap((value) => {
-        console.log('Login response:', value);
-        console.log('Token type:', typeof value.token);
-
-        if (typeof value.token === 'object' && value.token !== null) {
-          const tokenObj = value.token as any;
-
-          if ('accessToken' in tokenObj) {
-            sessionStorage.setItem("auth-token", tokenObj.accessToken);
-          } else if ('token' in tokenObj) {
-            sessionStorage.setItem("auth-token", tokenObj.token);
-          } else if ('jwt' in tokenObj) {
-            sessionStorage.setItem("auth-token", tokenObj.jwt);
-          } else {
-            sessionStorage.setItem("auth-token", JSON.stringify(tokenObj));
-          }
-        } else {
-          sessionStorage.setItem("auth-token", value.token as string);
-        }
-
-        sessionStorage.setItem("user-id", value.userId.toString());
-        sessionStorage.setItem("username", value.username);
-
-        const storedToken = sessionStorage.getItem("auth-token");
-        console.log('Stored token:', storedToken);
-
-        this.router.navigate(['/dashboard']);
+        console.log('Login response completa:', value);
       }),
       catchError((error) => {
-        return throwError(error);
+        console.error('Detalhes completos do erro:', error);
+
+        if (error.error) {
+          if (typeof error.error === 'string') {
+            console.error('Erro retornado como string:', error.error);
+          } else {
+            console.error('Erro retornado como objeto:', error.error);
+          }
+        }
+
+        return throwError(() => error);
       })
     );
   }
