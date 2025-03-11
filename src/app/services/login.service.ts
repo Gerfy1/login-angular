@@ -6,6 +6,7 @@ import { ToastrService } from 'ngx-toastr';
 import { catchError } from 'rxjs/operators';
 import { throwError } from 'rxjs';
 import { Router } from '@angular/router';
+import { Observable } from 'rxjs';
 
 interface TokenWithAccessToken {
   accessToken: string;
@@ -69,11 +70,7 @@ export class LoginService {
     );
   }
 
-  testEndpoint() {
-    this.httpClient.get('/api/auth/test-auth', { responseType: 'text' })
-      .subscribe(
-        data => console.log('Sucesso:', data),
-        error => console.error('Erro:', error)
-      );
+  testEndpoint(): Observable<any> {
+    return this.httpClient.get('/api/auth/test-auth', { responseType: 'text' });
   }
 }

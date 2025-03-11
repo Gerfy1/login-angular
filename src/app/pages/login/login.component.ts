@@ -51,4 +51,17 @@ export class LoginComponent {
   navigate(){
     this.router.navigate(["/register"])
   }
+
+  testConnection() {
+    this.loginService.testEndpoint().subscribe({
+      next: (data) => {
+        console.log('Resposta:', data);
+        this.toastService.success("API conectada com sucesso!");
+      },
+      error: (err) => {
+        console.error('Erro completo:', err);
+        this.toastService.error("Erro na API: " + (err.error?.message || err.statusText));
+      }
+    });
+  }
 }
