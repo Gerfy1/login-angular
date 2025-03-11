@@ -81,4 +81,12 @@ export class LoginService {
       })
     );
   }
+
+  testEndpoint() {
+    this.httpClient.get('/api/auth/test-auth', { responseType: 'text' })
+      .subscribe(
+        data => console.log('Sucesso:', data),
+        error => console.error('Erro:', error)
+      );
+  }
 }
