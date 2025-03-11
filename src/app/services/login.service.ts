@@ -24,7 +24,7 @@ interface TokenWithJwt {
   providedIn: 'root'
 })
 export class LoginService {
-  private baseUrl = '/api/auth';
+  private baseUrl = 'https://jobsmemory.onrender.com/api/auth';
 
   constructor(private httpClient: HttpClient, private router: Router) { }
 
