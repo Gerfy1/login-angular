@@ -1,6 +1,6 @@
 {
   "rewrites": [
-    { "source": "/api/:path*", "destination": "https://jobsmemory.onrender.com/api/:path*" }
+    { "source": "/api/:path*", "destination": "https://jobsmemory.onrender.com:81/api/:path*" }
   ],
   "headers": [
     {
