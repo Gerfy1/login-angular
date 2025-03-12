@@ -25,6 +25,7 @@ interface TokenWithJwt {
 })
 export class LoginService {
   private baseUrl = '/api/auth';
+  private tokenKey = 'auth-token';
 
   constructor(private httpClient: HttpClient, private router: Router) { }
 
@@ -32,8 +33,20 @@ export class LoginService {
     console.log('Tentando login com:', { username, password: '***' });
 
     return this.httpClient.post<LoginResponse>(`${this.baseUrl}/login`, { username, password }).pipe(
-      tap((value) => {
-        console.log('Login response completa:', value);
+      tap((response) => {
+        console.log('Login response completa:', response);
+
+        if (response) {
+          if (typeof response === 'string') {
+            this.saveToken(response);
+          } else if ('token' in response) {
+            this.saveToken((response as TokenWithToken).token);
+          } else if ('accessToken' in response) {
+            this.saveToken((response as TokenWithAccessToken).accessToken);
+          } else if ('jwt' in response) {
+            this.saveToken((response as TokenWithJwt).jwt);
+          }
+        }
       }),
       catchError((error) => {
         console.error('Detalhes completos do erro:', error);
@@ -50,6 +63,23 @@ export class LoginService {
       })
     );
   }
+
+  private saveToken(token: string): void {
+    if (token) {
+      localStorage.setItem(this.tokenKey, token);
+      sessionStorage.setItem(this.tokenKey, token);
+      console.log('Token salvo com sucesso');
+    }
+  }
+
+  getToken(): string | null {
+    return localStorage.getItem(this.tokenKey);
+  }
+
+  isAuthenticated(): boolean {
+    return !!this.getToken();
+  }
+
 
   register(username: string, password: string){
     return this.httpClient.post(`${this.baseUrl}/register`, { username, password }, { observe: 'response' }).pipe(
