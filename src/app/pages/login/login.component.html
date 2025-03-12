@@ -6,7 +6,6 @@
   (navigate)="navigate()"
   [disablePrimarybtn]="!loginForm.valid"
 >
-<button type="button" (click)="testConnection()">Testar API</button>
     <form [formGroup]="loginForm">
       <app-primary-input
           formControlName="username"
