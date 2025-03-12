@@ -13,7 +13,7 @@ import { NotificationService } from "./notification.service";
 
 export class ReminderService {
 
-  private apiUrl = `http://localhost:81/api/reminders`;
+  private apiUrl = '/api/reminders';
   private remindersSubject = new BehaviorSubject<Reminder[]>([]);
   private reminders: Reminder[] = [];
 

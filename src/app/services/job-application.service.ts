@@ -9,8 +9,8 @@ import { EventService } from "./event.service";
 })
 
 export class JobApplicationService {
-
-  private apiUrl = 'http://localhost:81/api/job-applications';
+;
+  private apiUrl = 'api/job-applications';
 
 
   constructor(private http: HttpClient, private eventService: EventService){}

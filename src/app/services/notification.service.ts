@@ -23,12 +23,10 @@ public notificationsVisible$ = this.notificationsVisible.asObservable();
   }
 
 
-  // Método para exibir/ocultar notificações
 toggleNotifications(): void {
   this.notificationsVisible.next(!this.notificationsVisible.value);
 }
 
-// Método para fechar notificações
 hideNotifications(): void {
   this.notificationsVisible.next(false);
 }
