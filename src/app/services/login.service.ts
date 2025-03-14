@@ -26,6 +26,8 @@ interface TokenWithJwt {
 export class LoginService {
   private baseUrl = '/api/auth';
   private tokenKey = 'auth-token';
+  private userIdKey = 'user-id';
+  private usernameKey = 'username';
 
   constructor(private httpClient: HttpClient, private router: Router) { }
 
@@ -40,11 +42,19 @@ export class LoginService {
           if (typeof response === 'string') {
             this.saveToken(response);
           } else if ('token' in response) {
-            this.saveToken((response as TokenWithToken).token);
+            this.saveToken(response.token);
+
+            if ('userId' in response) {
+              this.saveUserId(response.userId);
+            }
+
+            if ('username' in response) {
+              this.saveUsername(response.username);
+            }
           } else if ('accessToken' in response) {
-            this.saveToken((response as TokenWithAccessToken).accessToken);
+            this.saveToken((response as any).accessToken);
           } else if ('jwt' in response) {
-            this.saveToken((response as TokenWithJwt).jwt);
+            this.saveToken((response as any).jwt);
           }
         }
       }),
@@ -71,6 +81,27 @@ export class LoginService {
       console.log('Token salvo com sucesso');
     }
   }
+  private saveUserId(userId: number): void {
+    localStorage.setItem(this.userIdKey, userId.toString());
+    sessionStorage.setItem(this.userIdKey, userId.toString());
+    console.log('UserId salvo com sucesso:', userId);
+  }
+
+  private saveUsername(username: string): void {
+    localStorage.setItem(this.usernameKey, username);
+    sessionStorage.setItem(this.usernameKey, username);
+    console.log('Username salvo com sucesso:', username);
+  }
+
+
+  getUserId(): number | null {
+    const id = localStorage.getItem(this.userIdKey);
+    return id ? parseInt(id, 10) : null;
+  }
+
+  getUsername(): string | null {
+    return localStorage.getItem(this.usernameKey);
+  }
 
   getToken(): string | null {
     return localStorage.getItem(this.tokenKey);
@@ -80,6 +111,23 @@ export class LoginService {
     return !!this.getToken();
   }
 
+  getUserData(): { userId: number | null, username: string | null, token: string | null } {
+    return {
+      userId: this.getUserId(),
+      username: this.getUsername(),
+      token: this.getToken()
+    };
+  }
+
+  logout(): void {
+    localStorage.removeItem(this.tokenKey);
+    localStorage.removeItem(this.userIdKey);
+    localStorage.removeItem(this.usernameKey);
+    sessionStorage.removeItem(this.tokenKey);
+    sessionStorage.removeItem(this.userIdKey);
+    sessionStorage.removeItem(this.usernameKey);
+    this.router.navigate(['/login']);
+  }
 
   register(username: string, password: string){
     return this.httpClient.post(`${this.baseUrl}/register`, { username, password }, { observe: 'response' }).pipe(
