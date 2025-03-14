@@ -129,7 +129,7 @@ export class DashboardHomeComponent implements OnInit, AfterViewInit {
   }
 
   loadUserInfo(): void {
-    this.loginService.getUsername || 'Usuário';
+    this.username = this.loginService.getUsername() || 'Usuário';
   }
 
   loadDashboardData(): void {
