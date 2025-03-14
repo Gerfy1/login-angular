@@ -16,6 +16,8 @@ import { ReminderService } from '../../services/reminder.service';
 import { AddReminderDialogComponent } from '../../components/add-reminder-dialog/add-reminder-dialog.component';
 import { Chart, registerables } from 'chart.js';
 import { BaseChartDirective } from 'ng2-charts';
+import { LoginService } from '../../services/login.service';
+
 
 Chart.register(...registerables);
 
@@ -108,7 +110,7 @@ export class DashboardHomeComponent implements OnInit, AfterViewInit {
     }, 100);
   }
 
-  constructor(private notificationService: NotificationService, private jobApplicationService: JobApplicationService, private dialog: MatDialog, private reminderService: ReminderService, private cdr: ChangeDetectorRef) {}
+  constructor(private notificationService: NotificationService, private jobApplicationService: JobApplicationService, private dialog: MatDialog, private reminderService: ReminderService, private cdr: ChangeDetectorRef, private loginService: LoginService) {}
 
   ngAfterViewInit(): void {
     setTimeout(() => {
@@ -127,7 +129,7 @@ export class DashboardHomeComponent implements OnInit, AfterViewInit {
   }
 
   loadUserInfo(): void {
-    this.username = sessionStorage.getItem('username') || 'Usuário';
+    this.loginService.getUsername || 'Usuário';
   }
 
   loadDashboardData(): void {
