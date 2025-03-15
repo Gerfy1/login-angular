@@ -17,14 +17,15 @@ export class JobApplicationService {
   constructor(private http: HttpClient, private eventService: EventService, private loginService: LoginService){}
 
   private getAuthHeaders(): HttpHeaders {
-    const token = sessionStorage.getItem('auth-token');
+    const token = this.loginService.getToken();
+    if (!token) {
+      console.warn('Token não encontrado ao configurar headers');
+    }
 
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${token}`
+    return new HttpHeaders({
+      'Authorization': `Bearer ${token || ''}`,
+      'Content-Type': 'application/json'
     });
-
-    return headers;
   }
 
   getJobApplications(): Observable<JobApplication[]> {
@@ -62,4 +63,5 @@ export class JobApplicationService {
     const headers = this.getAuthHeaders();
     return this.http.delete<void>(`${this.apiUrl}/${id}`, { headers });
   }
+
 }
