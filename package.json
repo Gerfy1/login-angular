@@ -5,7 +5,7 @@
     "ng": "ng",
     "start": "ng serve",
     "watch": "ng build --watch --configuration development",
-    "build": "ng build --configuration production --aot --output-hashing=all --optimization=false",
+    "build": "node vercel-build.js",
     "test": "ng test",
     "vercel-build": "node vercel-build.js"
   },
