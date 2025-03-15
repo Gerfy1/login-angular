@@ -1,10 +1,6 @@
 <div class="p-3">
-  <h2 *ngIf="data?.isEditing" class="mb-3">
-    Editar Lembrete {{ data?.jobApplication?.jobName ? 'para ' + data?.jobApplication?.jobName : '' }}
-  </h2>
-  <h2 *ngIf="!data?.isEditing" class="mb-3">
-    Novo Lembrete {{ data?.jobApplication?.jobName ? 'para ' + data?.jobApplication?.jobName : '' }}
-  </h2>
+  <h2 *ngIf="isEditing">Editar Lembrete {{ data && data.jobApplication && data.jobApplication.jobName ? 'para ' + data.jobApplication.jobName : '' }}</h2>
+<h2 *ngIf="!isEditing">Novo Lembrete {{ data && data.jobApplication && data.jobApplication.jobName ? 'para ' + data.jobApplication.jobName : '' }}</h2>
 
   <form [formGroup]="reminderForm" (ngSubmit)="onSubmit()">
     <div class="mb-3">
