@@ -3,4 +3,4 @@
  */
 
 // Zone JS é necessário para o funcionamento do Angular
-import 'zone.js';  // Incluído com Angular CLI.
+import '../node_modules/zone.js/dist/zone';  // Incluído com Angular CLI.
