@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { CalendarEvent, CalendarEventTimesChangedEvent, CalendarModule } from 'angular-calendar';
-import { isSameDay } from 'date-fns';
+import { isSameDay, set } from 'date-fns';
 import { AfterViewInit, ViewChild } from '@angular/core';
 import { ChangeDetectorRef } from '@angular/core';
 import { Subject } from 'rxjs';
@@ -103,6 +103,14 @@ export class DashboardHomeComponent implements OnInit, AfterViewInit {
     this.statusChartData.datasets[0].data = [
       pendingCount, interviewCount, approvedCount, rejectedCount
     ];
+
+    if (this.statusChartOptions && this.statusChartOptions.animation){
+      this.statusChartOptions.animation = false;
+    }
+    if (this.statusChart?.chart){
+      this.statusChart.chart.update();
+    }
+
     setTimeout(() => {
       if (this.statusChart?.chart) {
         this.statusChart.chart.update();
@@ -113,14 +121,34 @@ export class DashboardHomeComponent implements OnInit, AfterViewInit {
   constructor(private notificationService: NotificationService, private jobApplicationService: JobApplicationService, private dialog: MatDialog, private reminderService: ReminderService, private cdr: ChangeDetectorRef, private loginService: LoginService) {}
 
   ngAfterViewInit(): void {
+    this.cdr.detectChanges();
     setTimeout(() => {
-      if (this.statusChart?.chart) {
-        this.statusChart.chart.update();
-      }
-      if (this.monthlyChart?.chart) {
-        this.monthlyChart.chart.update();
-      }
-    }, 300);
+      this.refreshAllCharts();
+    }, 100);
+
+    setTimeout(() => {
+      this.refreshAllCharts();
+    }, 500);
+
+    setTimeout(() => {
+      this.refreshAllCharts();
+      this.cdr.detectChanges();
+    }, 1000);
+
+  }
+
+  private refreshAllCharts(): void {
+    console.log("Atualizando os Gráficos");
+    if (this.statusChart?.chart) {
+      this.statusChart.chart.update();
+    } else {
+      console.log("Gráfico de stauts não disponivel");
+    }
+    if (this.monthlyChart?.chart){
+      this.monthlyChart.chart.update();
+    } else {
+      console.log ("Gráfico mensal não disponível");
+    }
   }
 
   ngOnInit(): void {
@@ -174,14 +202,10 @@ export class DashboardHomeComponent implements OnInit, AfterViewInit {
         this.refresh.next();
         this.cdr.detectChanges();
         setTimeout(() => {
-          if (this.statusChart?.chart) {
-            this.statusChart.chart.update();
-          }
-          if (this.monthlyChart?.chart) {
-            this.monthlyChart.chart.update();
-          }
-          this.cdr.detectChanges();
-        }, 500);
+          this.refreshAllCharts();
+        }, 200);
+      }, error => {
+        console.error('Erro ao carregar candidaturas', error);
       });
     }
 
@@ -214,9 +238,21 @@ export class DashboardHomeComponent implements OnInit, AfterViewInit {
   const monthlyData = Array(12).fill(0);
   applications.forEach(app => {
     const appDate = new Date(app.date);
-    monthlyData[appDate.getMonth()]++;
+    if (!isNaN(appDate.getTime())){
+      monthlyData[appDate.getMonth()]++;
+    }
   });
+
   this.monthlyChartData.datasets[0].data = monthlyData;
+
+  if (this.monthlyChartOptions && this.monthlyChartOptions.animation){
+    this.monthlyChartOptions.animation = false;
+  }
+
+  if (this.monthlyChart?.chart){
+    this.monthlyChart.chart.update();
+  }
+
   setTimeout(() => {
     if (this.monthlyChart?.chart) {
       this.monthlyChart.chart.update();
