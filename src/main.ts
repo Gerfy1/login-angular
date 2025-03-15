@@ -28,23 +28,25 @@ if (environment.production){
 
 bootstrapApplication(AppComponent, {
   providers: [
-    { provide: NgZone, useFactory: () => new NgZone({ enableLongStackTrace: false }) },
     provideRouter(routes),
     provideCharts(withDefaultRegisterables()),
     provideAnimations(),
+    {
+      provide: DateAdapter,
+      useFactory: adapterFactory
+    },
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
+    { provide: HTTP_INTERCEPTORS, useClass: LoadingInterceptor, multi: true },
     importProvidersFrom(
       CalendarModule.forRoot({ provide: DateAdapter, useFactory: adapterFactory }),
       ToastrModule.forRoot(),
       HttpClientModule,
-      HttpClient,
       ReactiveFormsModule,
       FormsModule,
       MatDialogModule,
       MatSnackBarModule,
       MatButtonModule,
       NgxSpinnerModule
-    ),
-    {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true},
-    {provide: HTTP_INTERCEPTORS, useClass: LoadingInterceptor, multi: true}
+    )
   ]
 }).catch((err) => console.error(err));
