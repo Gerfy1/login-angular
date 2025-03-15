@@ -19,7 +19,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatButtonModule } from '@angular/material/button';
 import { NgxSpinner, NgxSpinnerModule } from 'ngx-spinner';
 import { LoadingInterceptor } from './app/interceptors/loading.interceptor';
-
+import { NgZone } from '@angular/core';
 
 
 if (environment.production){
@@ -28,6 +28,7 @@ if (environment.production){
 
 bootstrapApplication(AppComponent, {
   providers: [
+    { provide: NgZone, useFactory: () => new NgZone({ enableLongStackTrace: false }) },
     provideRouter(routes),
     provideCharts(withDefaultRegisterables()),
     provideAnimations(),
