@@ -35,7 +35,8 @@
               "node_modules/ngx-spinner/animations/ball-clip-rotate-multiple.css"
             ],
             "scripts": [
-              "node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"
+              "node_modules/bootstrap/dist/js/bootstrap.bundle.min.js",
+              "node_modules/zone.js/bundles/zone.umd.js"
             ]
           },
           "configurations": {
