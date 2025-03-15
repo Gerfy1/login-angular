@@ -5,9 +5,9 @@
     "ng": "ng",
     "start": "ng serve",
     "watch": "ng build --watch --configuration development",
-    "build": "node vercel-build.js",
+    "build": "node ./vercel-build.js",
     "test": "ng test",
-    "vercel-build": "node vercel-build.js"
+    "vercel-build": "node ./vercel-build.js"
   },
   "private": true,
   "dependencies": {
