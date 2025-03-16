@@ -61,7 +61,7 @@ export class DashboardHomeComponent implements OnInit, AfterViewInit {
   };
 
   statusChartOptions: ChartConfiguration['options'] = {
-    responsive: false,
+    responsive: true,
     plugins: {
       legend: {
         position: 'top',
@@ -79,7 +79,7 @@ export class DashboardHomeComponent implements OnInit, AfterViewInit {
   };
 
   monthlyChartOptions: ChartConfiguration['options'] = {
-    responsive: false,
+    responsive: true,
     scales: {
       x: { grid: { display: false } },
       y: {
