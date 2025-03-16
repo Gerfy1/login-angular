@@ -52,7 +52,7 @@ export class LoginComponent {
         if (err.status === 400) {
           this.toastService.error("Usuário ou senha inválidos");
         } else {
-          this.toastService.error("Erro ao logar, tente novamente!");
+          this.toastService.error("Erro ao logar, tente novamente ou verifique sua senha!");
         }
       }
     });
