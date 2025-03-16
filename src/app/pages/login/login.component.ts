@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
 import { DefaultLoginLayoutComponent } from '../../components/default-login-layout/default-login-layout.component';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { PrimaryInputComponent } from '../../components/primary-input/primary-input.component';
@@ -23,6 +23,16 @@ import { Observable, throwError } from 'rxjs';
   styleUrl: './login.component.scss'
 })
 export class LoginComponent {
+
+  @HostListener('document:keydown.enter', ['$event'])
+  handleKeyboardEvent(event: KeyboardEvent) {
+    const activeElement = document.activeElement;
+    const isRelevantElement = activeElement?.tagName === 'INPUT';
+    if (isRelevantElement) {
+      event.preventDefault();
+      this.submit();
+    }
+  }
 
   loginForm!: FormGroup;
   constructor(private router:Router, private loginService: LoginService, private toastService: ToastrService){
