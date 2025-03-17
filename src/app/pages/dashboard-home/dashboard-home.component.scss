@@ -14,4 +14,16 @@ a.btn, button.btn {
 .chart {
   display: block;
   width: 100%;
+  min-height: 250PX;
+}
+.chart-container {
+  position: relative;
+  width: 100%;
+  height: 250px;
+  margin: 0 auto;
+}
+
+canvas[baseChart] {
+  width: 100% !important;
+  height: 100% !important;
 }
