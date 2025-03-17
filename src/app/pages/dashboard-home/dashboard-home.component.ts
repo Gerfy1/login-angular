@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CalendarEvent, CalendarEventTimesChangedEvent, CalendarModule } from 'angular-calendar';
 import { isSameDay, set } from 'date-fns';
 import { AfterViewInit, ElementRef, NgZone, ViewChild } from '@angular/core';
@@ -28,7 +28,7 @@ Chart.register(...registerables);
   templateUrl: './dashboard-home.component.html',
   styleUrl: './dashboard-home.component.scss'
 })
-export class DashboardHomeComponent implements OnInit, AfterViewInit {
+export class DashboardHomeComponent implements OnInit, AfterViewInit, OnDestroy {
 
   @ViewChild('statusChart') statusChart?: BaseChartDirective;
   @ViewChild('monthlyChart') monthlyChart?: BaseChartDirective;
@@ -51,6 +51,8 @@ export class DashboardHomeComponent implements OnInit, AfterViewInit {
   events: any[] = [];
   refresh = new Subject<void>();
   activeDayIsOpen: boolean = false;
+
+  private resizeObserver?: ResizeObserver;
 
   statusChartData: ChartData<'pie'> = {
     labels: ['Pendente', 'Entrevistas', 'Aprovadas', 'Rejeitadas'],
@@ -107,6 +109,9 @@ export class DashboardHomeComponent implements OnInit, AfterViewInit {
     if (this.statusChartOptions && this.statusChartOptions.animation) {
       this.statusChartOptions.animation = false;
     }
+    if (this.statusChart?.chart?.canvas){
+      void this.statusChart.chart.canvas.offsetHeight;
+    }
     if (this.statusChart?.chart) {
       this.statusChart.chart.update();
     }
@@ -122,9 +127,11 @@ export class DashboardHomeComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit(): void {
     this.cdr.detectChanges();
+    this.setupResizeObserver();
+    window.addEventListener('resize', this.handleWindowResize);
     setTimeout(() => {
       this.refreshAllCharts();
-    }, 100);
+    }, 300);
 
     setTimeout(() => {
       this.refreshAllCharts();
@@ -151,12 +158,40 @@ export class DashboardHomeComponent implements OnInit, AfterViewInit {
     } else {
       console.log("Gráfico mensal não disponível");
     }
+    this.cdr.markForCheck();
   }
 
   ngOnInit(): void {
     this.loadUserInfo();
     this.loadDashboardData();
   }
+
+  ngOnDestroy(): void {
+  window.removeEventListener('resize', this.handleWindowResize);
+  if (this.resizeObserver){
+    this.resizeObserver.disconnect();
+  }
+  }
+
+  private handleWindowResize = (): void => {
+    this.refreshAllCharts();
+  }
+
+  private setupResizeObserver(): void {
+    if (typeof ResizeObserver !== 'undefined') {
+      this.resizeObserver = new ResizeObserver(() => {
+        this.refreshAllCharts();
+      });
+      setTimeout(() => {
+        const statusChartElement = this.statusChart?.chart?.canvas?.parentElement;
+        const monthlyChartElement = this.monthlyChart?.chart?.canvas?.parentElement;
+
+        if (statusChartElement) this.resizeObserver?.observe (statusChartElement);
+        if (monthlyChartElement) this.resizeObserver?.observe (monthlyChartElement);
+      }, 500)
+    }
+  }
+
 
   loadUserInfo(): void {
     this.username = this.loginService.getUsername() || 'Usuário';
@@ -249,6 +284,9 @@ export class DashboardHomeComponent implements OnInit, AfterViewInit {
 
     if (this.monthlyChartOptions && this.monthlyChartOptions.animation) {
       this.monthlyChartOptions.animation = false;
+    }
+    if (this.monthlyChart?.chart?.canvas){
+      void this.monthlyChart.chart.canvas.offsetHeight;
     }
 
     if (this.monthlyChart?.chart) {
