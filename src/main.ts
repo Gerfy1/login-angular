@@ -21,6 +21,9 @@ import { MatButtonModule } from '@angular/material/button';
 import { NgxSpinner, NgxSpinnerModule } from 'ngx-spinner';
 import { LoadingInterceptor } from './app/interceptors/loading.interceptor';
 import { NgZone } from '@angular/core';
+import { Chart, registerables } from 'chart.js';
+
+Chart.register(...registerables);
 
 
 if (environment.production){

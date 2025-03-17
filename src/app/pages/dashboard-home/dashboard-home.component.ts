@@ -24,7 +24,7 @@ Chart.register(...registerables);
 
 @Component({
   selector: 'app-dashboard-home',
-  imports: [ CommonModule, CalendarModule, RouterModule, BaseChartDirective ],
+  imports: [CommonModule, CalendarModule, RouterModule, BaseChartDirective],
   templateUrl: './dashboard-home.component.html',
   styleUrl: './dashboard-home.component.scss'
 })
@@ -48,7 +48,7 @@ export class DashboardHomeComponent implements OnInit, AfterViewInit {
   upcomingReminders: any[] = [];
 
   viewDate: Date = new Date();
-  events: any [] = [];
+  events: any[] = [];
   refresh = new Subject<void>();
   activeDayIsOpen: boolean = false;
 
@@ -69,7 +69,7 @@ export class DashboardHomeComponent implements OnInit, AfterViewInit {
     }
   };
 
-  monthlyChartData: ChartData<'bar'> ={
+  monthlyChartData: ChartData<'bar'> = {
     labels: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Aug', 'Set', 'Out', 'Nov', 'Dez'],
     datasets: [{
       label: 'Candidaturas',
@@ -84,7 +84,7 @@ export class DashboardHomeComponent implements OnInit, AfterViewInit {
       x: { grid: { display: false } },
       y: {
         beginAtZero: true,
-        ticks: {precision: 0}
+        ticks: { precision: 0 }
       }
     },
     plugins: {
@@ -104,10 +104,10 @@ export class DashboardHomeComponent implements OnInit, AfterViewInit {
       pendingCount, interviewCount, approvedCount, rejectedCount
     ];
 
-    if (this.statusChartOptions && this.statusChartOptions.animation){
+    if (this.statusChartOptions && this.statusChartOptions.animation) {
       this.statusChartOptions.animation = false;
     }
-    if (this.statusChart?.chart){
+    if (this.statusChart?.chart) {
       this.statusChart.chart.update();
     }
 
@@ -118,7 +118,7 @@ export class DashboardHomeComponent implements OnInit, AfterViewInit {
     }, 100);
   }
 
-  constructor(private notificationService: NotificationService, private jobApplicationService: JobApplicationService, private dialog: MatDialog, private reminderService: ReminderService, private cdr: ChangeDetectorRef, private loginService: LoginService) {}
+  constructor(private notificationService: NotificationService, private jobApplicationService: JobApplicationService, private dialog: MatDialog, private reminderService: ReminderService, private cdr: ChangeDetectorRef, private loginService: LoginService) { }
 
   ngAfterViewInit(): void {
     this.cdr.detectChanges();
@@ -145,11 +145,11 @@ export class DashboardHomeComponent implements OnInit, AfterViewInit {
     } else {
       console.log("Gráfico de stauts não disponivel");
     }
-    if (this.monthlyChart?.chart){
+    if (this.monthlyChart?.chart) {
       this.monthlyChart.chart.update();
       this.monthlyChart.chart?.resize();
     } else {
-      console.log ("Gráfico mensal não disponível");
+      console.log("Gráfico mensal não disponível");
     }
   }
 
@@ -166,15 +166,15 @@ export class DashboardHomeComponent implements OnInit, AfterViewInit {
     this.jobApplicationService.getJobApplications().subscribe(applications => {
       this.totalApplications = applications.length;
       this.latestApplications = applications
-      .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
-      .slice(0, 5);
+        .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+        .slice(0, 5);
       this.activeApplications = applications.filter(app =>
         !['Rejeitado', 'Aceito'].includes(app.status)).length;
-        this.interviewCount = applications.filter(app =>
-          app.status === 'Em andamento' || app.stage?.includes('Em andamento')).length;
-          this.offerCount = applications.filter(app => app.status === 'Aceito').length;
+      this.interviewCount = applications.filter(app =>
+        app.status === 'Em andamento' || app.stage?.includes('Em andamento')).length;
+      this.offerCount = applications.filter(app => app.status === 'Aceito').length;
       this.responseRate = this.totalApplications ?
-        Math.round((this.totalApplications - applications.filter (app => app.status === 'Pendente').length) / this.totalApplications *100) : 0;
+        Math.round((this.totalApplications - applications.filter(app => app.status === 'Pendente').length) / this.totalApplications * 100) : 0;
       this.interviewRate = this.totalApplications ?
         Math.round(this.interviewCount / this.totalApplications * 100) : 0;
       this.offerRate = this.totalApplications ?
@@ -183,35 +183,35 @@ export class DashboardHomeComponent implements OnInit, AfterViewInit {
       this.updateStatusChart(applications);
       this.updateMonthlyChart(applications);
 
-      });
-      this.reminderService.getReminders().subscribe(reminders => {
-        const now = new Date();
-        this.upcomingReminders = reminders
-          .filter(reminder => new Date(reminder.date) > now)
-          .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
-          .slice(0, 3);
+    });
+    this.reminderService.getReminders().subscribe(reminders => {
+      const now = new Date();
+      this.upcomingReminders = reminders
+        .filter(reminder => new Date(reminder.date) > now)
+        .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
+        .slice(0, 3);
 
-        this.events = reminders.map(reminder => ({
-          id: reminder.id,
-          title: reminder.title,
-          start: new Date(reminder.date),
-          color: {
-            primary: '#1976d2',
-            secondary: '#e3f2fd'
-          },
-          meta: reminder
-        }));
-        this.refresh.next();
-        this.cdr.detectChanges();
-        setTimeout(() => {
-          this.refreshAllCharts();
-        }, 200);
-      }, error => {
-        console.error('Erro ao carregar candidaturas', error);
-      });
-    }
+      this.events = reminders.map(reminder => ({
+        id: reminder.id,
+        title: reminder.title,
+        start: new Date(reminder.date),
+        color: {
+          primary: '#1976d2',
+          secondary: '#e3f2fd'
+        },
+        meta: reminder
+      }));
+      this.refresh.next();
+      this.cdr.detectChanges();
+      setTimeout(() => {
+        this.refreshAllCharts();
+      }, 200);
+    }, error => {
+      console.error('Erro ao carregar candidaturas', error);
+    });
+  }
 
- calculateApplicationTrend(applications: any[]): void {
+  calculateApplicationTrend(applications: any[]): void {
     const now = new Date();
     const currentMonth = now.getMonth();
     const currentYear = now.getFullYear();
@@ -220,12 +220,12 @@ export class DashboardHomeComponent implements OnInit, AfterViewInit {
     const lastMonthYear = currentMonth === 0 ? currentYear - 1 : currentYear;
 
     const currentMonthApps = applications.filter(app => {
-      const appDate = new Date (app.date);
+      const appDate = new Date(app.date);
       return appDate.getMonth() === currentMonth && appDate.getFullYear() === currentYear;
     }).length;
 
     const lastMonthApps = applications.filter(app => {
-      const appDate = new Date (app.date);
+      const appDate = new Date(app.date);
       return appDate.getMonth() === lastMonth && appDate.getFullYear() === lastMonthYear;
     }).length;
 
@@ -234,68 +234,68 @@ export class DashboardHomeComponent implements OnInit, AfterViewInit {
     } else {
       this.applicationTrend = Math.round((currentMonthApps - lastMonthApps) / lastMonthApps * 100);
     }
- }
+  }
 
- updateMonthlyChart(applications: any[]): void {
-  const monthlyData = Array(12).fill(0);
-  applications.forEach(app => {
-    const appDate = new Date(app.date);
-    if (!isNaN(appDate.getTime())){
-      monthlyData[appDate.getMonth()]++;
+  updateMonthlyChart(applications: any[]): void {
+    const monthlyData = Array(12).fill(0);
+    applications.forEach(app => {
+      const appDate = new Date(app.date);
+      if (!isNaN(appDate.getTime())) {
+        monthlyData[appDate.getMonth()]++;
+      }
+    });
+
+    this.monthlyChartData.datasets[0].data = monthlyData;
+
+    if (this.monthlyChartOptions && this.monthlyChartOptions.animation) {
+      this.monthlyChartOptions.animation = false;
     }
-  });
 
-  this.monthlyChartData.datasets[0].data = monthlyData;
-
-  if (this.monthlyChartOptions && this.monthlyChartOptions.animation){
-    this.monthlyChartOptions.animation = false;
-  }
-
-  if (this.monthlyChart?.chart){
-    this.monthlyChart.chart.update();
-  }
-
-  setTimeout(() => {
     if (this.monthlyChart?.chart) {
       this.monthlyChart.chart.update();
     }
-  }, 100);
- }
 
- dayClicked({date, events}: any) : void {
-  this.viewDate = date;
-  this.activeDayIsOpen = events.length > 0;
- }
- handleEvent (action: string, event: any): void {
-    console.log('Event clicked', event);
- }
-
- addReminder(): void {
-  if (this.latestApplications.length === 0) {
-    this.notificationService.showWarning('Você precisa ter pelo menos uma candidatura para adicionar um lembrete.');
-    return;
+    setTimeout(() => {
+      if (this.monthlyChart?.chart) {
+        this.monthlyChart.chart.update();
+      }
+    }, 100);
   }
 
-  const dialogRef = this.dialog.open(AddReminderDialogComponent, {
-    width: '400px',
-    data: {
-      date: new Date(),
-      jobApplications: this.latestApplications,
-      requireJobSelection: true,
-      isEditing: false
+  dayClicked({ date, events }: any): void {
+    this.viewDate = date;
+    this.activeDayIsOpen = events.length > 0;
+  }
+  handleEvent(action: string, event: any): void {
+    console.log('Event clicked', event);
+  }
+
+  addReminder(): void {
+    if (this.latestApplications.length === 0) {
+      this.notificationService.showWarning('Você precisa ter pelo menos uma candidatura para adicionar um lembrete.');
+      return;
     }
-  });
 
-  dialogRef.afterClosed().subscribe(result => {
-    if (result) {
-      this.loadDashboardData();
-    }
-  });
-}
+    const dialogRef = this.dialog.open(AddReminderDialogComponent, {
+      width: '400px',
+      data: {
+        date: new Date(),
+        jobApplications: this.latestApplications,
+        requireJobSelection: true,
+        isEditing: false
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.loadDashboardData();
+      }
+    });
+  }
 
 
-isSameMonth(date: Date, viewDate: Date): boolean {
-  return date.getMonth() === viewDate.getMonth() && date.getFullYear() === viewDate.getFullYear();
-}
+  isSameMonth(date: Date, viewDate: Date): boolean {
+    return date.getMonth() === viewDate.getMonth() && date.getFullYear() === viewDate.getFullYear();
+  }
 }
 
