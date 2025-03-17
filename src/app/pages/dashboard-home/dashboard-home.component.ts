@@ -133,7 +133,7 @@ export class DashboardHomeComponent implements OnInit, AfterViewInit {
     setTimeout(() => {
       this.refreshAllCharts();
       this.cdr.detectChanges();
-    }, 1000);
+    }, 1500);
 
   }
 
@@ -141,11 +141,13 @@ export class DashboardHomeComponent implements OnInit, AfterViewInit {
     console.log("Atualizando os Gráficos");
     if (this.statusChart?.chart) {
       this.statusChart.chart.update();
+      this.statusChart.chart.resize();
     } else {
       console.log("Gráfico de stauts não disponivel");
     }
     if (this.monthlyChart?.chart){
       this.monthlyChart.chart.update();
+      this.monthlyChart.chart?.resize();
     } else {
       console.log ("Gráfico mensal não disponível");
     }
