@@ -1,3 +1,5 @@
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.1.3/Chart.bundle.min.js"></script>
+
 <div class="dashboard-home container">
   <div class="row">
     <div class="col-12 mb-4">
@@ -108,7 +110,7 @@
             Candidaturas por Mês
           </div>
           <div class="card-body">
-            <canvas baseChart #monthlyChart
+            <canvas baseChart #monthlyChart class="chart"
               [data]="monthlyChartData"
               [type]="'bar'"
               [options]="monthlyChartOptions">
