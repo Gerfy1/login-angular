@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { CalendarEvent, CalendarEventTimesChangedEvent, CalendarModule } from 'angular-calendar';
 import { isSameDay, set } from 'date-fns';
-import { AfterViewInit, ViewChild } from '@angular/core';
+import { AfterViewInit, ElementRef, NgZone, ViewChild } from '@angular/core';
 import { ChangeDetectorRef } from '@angular/core';
 import { Subject } from 'rxjs';
 import { StatisticsComponent } from '../../components/statistics/statistics.component';
