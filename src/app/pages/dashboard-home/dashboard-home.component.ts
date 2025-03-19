@@ -64,6 +64,8 @@ export class DashboardHomeComponent implements OnInit, AfterViewInit, OnDestroy 
 
   statusChartOptions: ChartConfiguration['options'] = {
     responsive: true,
+    maintainAspectRatio: true,
+    aspectRatio: 2,
     plugins: {
       legend: {
         position: 'top',
@@ -82,6 +84,8 @@ export class DashboardHomeComponent implements OnInit, AfterViewInit, OnDestroy 
 
   monthlyChartOptions: ChartConfiguration['options'] = {
     responsive: true,
+    maintainAspectRatio: true,
+    aspectRatio: 2,
     scales: {
       x: { grid: { display: false } },
       y: {
