@@ -156,26 +156,3 @@
         </div>
       </div>
     </div>
-
-    <div class="row mt-2">
-      <div class="col-12">
-        <div class="card">
-          <div class="card-header d-flex justify-content-between align-items-center">
-            <span>Calendário</span>
-            <button class="btn btn-sm btn-outline-primary" [routerLink]="['/calendar']">Ver detalhes</button>
-          </div>
-          <div class="card-body small-calendar">
-            <mwl-calendar-month-view
-              [viewDate]="viewDate"
-              [events]="events"
-              [refresh]="refresh"
-              [activeDayIsOpen]="activeDayIsOpen"
-              (dayClicked)="dayClicked($event.day)"
-              (eventClicked)="handleEvent('Clicked', $event.event)">
-            </mwl-calendar-month-view>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
