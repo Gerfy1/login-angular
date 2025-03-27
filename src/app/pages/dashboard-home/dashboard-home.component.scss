@@ -1,6 +1,10 @@
-.card-header,
-.card-body {
+.card-header button,
+.card-header a,
+.card-body button,
+.card-body a {
   position: relative;
+  z-index: 10;
+  pointer-events: auto;
 }
 
 a.btn,
@@ -10,19 +14,7 @@ button.btn {
   cursor: pointer !important;
 }
 
-.dashboard-home * {
-  pointer-events: auto;
-}
-
 .chart {
   display: block;
   width: 100%;
-}
-
-.chart-container {
-  display: block;
-  position: relative;
-  height: auto;
-  width: 100%;
-  margin-bottom: 20px;
 }
