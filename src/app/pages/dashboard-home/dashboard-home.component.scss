@@ -1,9 +1,15 @@
+.card {
+  position: unset;
+  z-index: 1;
+  transform: none;
+}
+
 .card-header button,
 .card-header a,
 .card-body button,
 .card-body a {
   position: relative;
-  z-index: 10;
+  z-index: 5;
   pointer-events: auto;
 }
 
