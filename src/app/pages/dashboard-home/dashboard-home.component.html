@@ -120,18 +120,19 @@
       <div class="col-md-4 mb-4">
         <div class="card h-100">
           <div class="card-header d-flex justify-content-between align-items-center">
-            <span>Próximos Eventos</span>
+            <span class="me-1">Próximos Eventos</span>
+
             <div>
-              <button (click)="addReminder()" class="btn btn-sm btn-primary me-2">
+              <button (click)="addReminder()" class="btn btn-sm btn-primary me-2 mb-1">
                 <i class="bi bi-calendar-plus me-1"></i>Adicionar
               </button>
-              <a [routerLink]="['/calendar']" class="btn btn-sm btn-outline-primary">Ver calendário</a>
+              <a [routerLink]="['/calendar']" class="btn btn-sm btn-outline-primary bi bi-calendar-week"> Calendário</a>
             </div>
           </div>
           <div class="card-body p-0">
             <div *ngIf="upcomingReminders.length === 0" class="text-center p-4">
               <p class="text-muted">Nenhum lembrete próximo</p>
-              <button (click)="addReminder()" class="btn btn-primary btn-sm">
+              <button (click)="addReminder()" class="btn btn-primary btn-sm mb-1">
                 <i class="bi bi-calendar-plus me-1"></i>Adicionar Lembrete
               </button>
             </div>
