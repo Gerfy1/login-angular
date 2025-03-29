@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, registerLocaleData } from '@angular/common';
 import { CalendarModule, DateAdapter } from 'angular-calendar';
 import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
 import { CalendarEvent, CalendarView } from 'angular-calendar';
@@ -15,6 +15,11 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { ReminderDetailsDialogComponent } from '../reminder-details-dialog/reminder-details-dialog.component';
 import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
 import { trigger, style, transition, animate } from '@angular/animations'; // Adicione esta linha
+import localePt from '@angular/common/locales/pt';
+import { ptBR } from 'date-fns/locale';
+
+registerLocaleData(localePt);
+
 
 @Component({
   selector: 'app-calendar',
@@ -43,6 +48,7 @@ export class CalendarComponent implements OnInit, OnDestroy{
   activeDayIsOpen: boolean = false;
   clickedDate: Date | null = null;
   refresh = new Subject<void>();
+  locale: string = 'pt-BR';
   private destroy$ = new Subject<void>();
 
   constructor(private reminderService: ReminderService, private dialog: MatDialog, private jobApplicationService: JobApplicationService, private snackBar: MatSnackBar) {}
