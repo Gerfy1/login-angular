@@ -13,7 +13,7 @@ import { environment } from "../../environments/environment";
 
 export class NotificationService {
 
-  private apiUrl = `${environment.apiUrl}/api/job-applications`;
+  private apiUrl = `${environment.apiUrl}/api/notifications`;
 
   private notifications: Notification[] = [];
   private notificationSubject = new BehaviorSubject<Notification[]>([]);
