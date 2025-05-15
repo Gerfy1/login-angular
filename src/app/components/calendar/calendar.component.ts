@@ -1,5 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule, registerLocaleData } from '@angular/common';
+import { CommonModule, registerLocaleData } from '@angular/common';
 import { CalendarModule, DateAdapter } from 'angular-calendar';
 import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
 import { CalendarEvent, CalendarView } from 'angular-calendar';
@@ -49,6 +50,7 @@ export class CalendarComponent implements OnInit, OnDestroy{
   activeDayIsOpen: boolean = false;
   clickedDate: Date | null = null;
   refresh = new Subject<void>();
+  locale: string = 'pt-BR';
   locale: string = 'pt-BR';
   private destroy$ = new Subject<void>();
 

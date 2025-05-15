@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CalendarEvent, CalendarEventTimesChangedEvent, CalendarModule } from 'angular-calendar';
 import { isSameDay, set } from 'date-fns';
 import { AfterViewInit, ElementRef, NgZone, ViewChild } from '@angular/core';
@@ -31,7 +31,7 @@ Chart.register(...registerables);
   templateUrl: './dashboard-home.component.html',
   styleUrl: './dashboard-home.component.scss'
 })
-export class DashboardHomeComponent implements OnInit, AfterViewInit {
+export class DashboardHomeComponent implements OnInit, AfterViewInit, OnDestroy {
 
   @ViewChild('statusChart') statusChart?: BaseChartDirective;
   @ViewChild('monthlyChart') monthlyChart?: BaseChartDirective;
@@ -120,6 +120,8 @@ export class DashboardHomeComponent implements OnInit, AfterViewInit {
 
   statusChartOptions: ChartConfiguration['options'] = {
     responsive: true,
+    maintainAspectRatio: true,
+    aspectRatio: 2,
     plugins: {
       legend: {
         position: 'top',
@@ -138,6 +140,8 @@ export class DashboardHomeComponent implements OnInit, AfterViewInit {
 
   monthlyChartOptions: ChartConfiguration['options'] = {
     responsive: true,
+    maintainAspectRatio: true,
+    aspectRatio: 2,
     scales: {
       x: { grid: { display: false } },
       y: {
@@ -205,6 +209,8 @@ export class DashboardHomeComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit(): void {
     this.cdr.detectChanges();
+    this.setupResizeObserver();
+    window.addEventListener('resize', this.handleWindowResize);
     setTimeout(() => {
       this.refreshAllChartsLayout();
     },150)
@@ -224,6 +230,7 @@ export class DashboardHomeComponent implements OnInit, AfterViewInit {
     } else {
       console.log("Gráfico mensal não disponível para resize")
     }
+    this.cdr.markForCheck();
   }
 
   ngOnInit(): void {

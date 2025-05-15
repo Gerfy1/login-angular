@@ -2,6 +2,7 @@
   <div class="row">
     <div class="col-12 mb-4">
       <h2 class="bi bi-house-check"> Bem-vindo, {{ username }}!</h2>
+      <h2 class="bi bi-house-check"> Bem-vindo, {{ username }}!</h2>
       <p class="text-muted">Resumo da sua jornada de candidaturas</p>
     </div>
     <div class="row mb-4">
@@ -58,6 +59,7 @@
           <div class="card-body p-0">
             <div *ngIf="latestApplications.length === 0" class="text-center p-4">
               <p class="text-muted">Nenhuma candidatura registrada</p>
+              <button routerLink="/job-applications" class="btn btn-primary btn-sm">
               <button routerLink="/job-applications" class="btn btn-primary btn-sm">
                 <i class="bi bi-plus-circle me-1"></i>Adicionar Candidatura
               </button>
@@ -116,16 +118,21 @@
           <div class="card-header d-flex justify-content-between align-items-center">
             <span class="me-1">Próximos Eventos</span>
 
+            <span class="me-1">Próximos Eventos</span>
+
             <div>
+              <button (click)="addReminder()" class="btn btn-sm btn-primary me-2 mb-1">
               <button (click)="addReminder()" class="btn btn-sm btn-primary me-2 mb-1">
                 <i class="bi bi-calendar-plus me-1"></i>Adicionar
               </button>
+              <a [routerLink]="['/calendar']" class="btn btn-sm btn-outline-primary bi bi-calendar-week mb-1"> Calendário</a>
               <a [routerLink]="['/calendar']" class="btn btn-sm btn-outline-primary bi bi-calendar-week mb-1"> Calendário</a>
             </div>
           </div>
           <div class="card-body p-0">
             <div *ngIf="upcomingReminders.length === 0" class="text-center p-4">
               <p class="text-muted">Nenhum lembrete próximo</p>
+              <button (click)="addReminder()" class="btn btn-primary btn-sm mb-1">
               <button (click)="addReminder()" class="btn btn-primary btn-sm mb-1">
                 <i class="bi bi-calendar-plus me-1"></i>Adicionar Lembrete
               </button>
