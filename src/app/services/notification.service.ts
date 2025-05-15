@@ -4,6 +4,7 @@ import { Notification } from "../models/notification.model";
 import { ToastrService } from "ngx-toastr";
 import { Overlay } from '@angular/cdk/overlay';
 import { HttpClient, HttpHeaders } from "@angular/common/http";
+import { environment } from "../../environments/environment";
 
 
 @Injectable({
@@ -12,7 +13,7 @@ import { HttpClient, HttpHeaders } from "@angular/common/http";
 
 export class NotificationService {
 
-  private apiUrl = '/api/notifications';
+  private apiUrl = `${environment.apiUrl}/api/job-applications`;
 
   private notifications: Notification[] = [];
   private notificationSubject = new BehaviorSubject<Notification[]>([]);
