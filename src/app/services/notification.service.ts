@@ -4,7 +4,7 @@ import { Notification } from "../models/notification.model";
 import { ToastrService } from "ngx-toastr";
 import { Overlay } from '@angular/cdk/overlay';
 import { HttpClient, HttpHeaders } from "@angular/common/http";
-import { environment } from "../../environments/environment";
+import { environment } from "../../environments/environment.prod";
 
 
 @Injectable({
