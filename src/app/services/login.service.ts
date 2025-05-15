@@ -9,6 +9,7 @@ import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { NotificationService } from './notification.service';
 import { ReminderService } from './reminder.service';
+import { environment } from '../../environments/environment.prod';
 
 
 interface TokenWithAccessToken {
@@ -27,7 +28,7 @@ interface TokenWithJwt {
   providedIn: 'root'
 })
 export class LoginService {
-  private baseUrl = '/api/auth';
+  private baseUrl = environment.apiUrl +'/api/auth';
   private tokenKey = 'auth-token';
   private userIdKey = 'user-id';
   private usernameKey = 'username';
