@@ -3,7 +3,7 @@ import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { Observable, BehaviorSubject, catchError } from "rxjs";
 import { tap } from "rxjs";
 import { Reminder } from "../models/reminder.model";
-import { environment } from "../../environments/environment";
+import { environment } from "../../environments/environment.prod";
 import { ReminderCreate } from "../models/reminder-create.model";
 import { NotificationService } from "./notification.service";
 
