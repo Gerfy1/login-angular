@@ -13,7 +13,7 @@ import { NotificationService } from "./notification.service";
 
 export class ReminderService {
 
-  private apiUrl = '/api/reminders';
+  private apiUrl = environment.apiUrl + '/api/reminders';
   private remindersSubject = new BehaviorSubject<Reminder[]>([]);
 
   public reminders$ = this.remindersSubject.asObservable();

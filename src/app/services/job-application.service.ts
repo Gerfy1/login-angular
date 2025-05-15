@@ -4,6 +4,7 @@ import { Observable, tap } from "rxjs";
 import { JobApplication } from "../models/job-application.model";
 import { EventService } from "./event.service";
 import { LoginService } from "./login.service";
+import { environment } from "../../environments/environment.prod";
 
 @Injectable({
   providedIn: 'root'
@@ -11,7 +12,7 @@ import { LoginService } from "./login.service";
 
 export class JobApplicationService {
 ;
-  private apiUrl = '/api/job-applications';
+  private apiUrl = environment.apiUrl + '/api/job-applications';
 
 
   constructor(private http: HttpClient, private eventService: EventService, private loginService: LoginService){}
