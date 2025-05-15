@@ -4,7 +4,7 @@
     <input type="text" id="jobName" class="form-control" formControlName="jobName" placeholder="Nome da Vaga">
   </div>
   <div class="mb-3">
-    <label for="jobDescription" class="form-label">Empresa/Descrição</label>
+    <label for="jobDescription" class="form-label">Empresa</label>
     <input type="text" id="jobDescription" class="form-control" formControlName="jobDescription" placeholder="Empresa ou a descrição da vaga">
   </div>
   <div class="mb-3">
@@ -13,15 +13,14 @@
   </div>
   <div class="mb-3">
     <label for="stage" class="form-label">Etapa</label>
-    <input type="text" id="stage" class="form-control" formControlName="stage" placeholder="Etapa">
+    <select id="stage" class="form-select" formControlName="stage">
+      <option *ngFor="let stage of stages" [value]="stage">{{ stage }}</option>
+    </select>
   </div>
   <div class="mb-3">
     <label for="status" class="form-label">Status</label>
     <select id="status" formControlName="status" class="form-select">
-      <option value="Pendente">Pendente</option>
-      <option value="Em andamento">Em andamento</option>
-      <option value="Aceito">Aceito</option>
-      <option value="Rejeitado">Rejeitado</option>
+      <option *ngFor="let status of statuses" [value]="status">{{ status }}</option>
     </select>
   </div>
   <div class="mb-3 form-check">

@@ -2,7 +2,7 @@ import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { NotificationListComponent } from '../notification-list/notification-list.component';
 import { NotificationService } from '../../services/notification.service';
 import { CommonModule, DOCUMENT } from '@angular/common';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { Inject } from '@angular/core';
 
 declare var bootstrap: any;
@@ -10,7 +10,7 @@ declare var bootstrap: any;
 
 @Component({
   selector: 'app-sidebar',
-  imports:  [CommonModule ,NotificationListComponent],
+  imports:  [CommonModule ,NotificationListComponent, RouterModule],
   templateUrl: './sidebar.component.html',
   styleUrl: './sidebar.component.scss'
 })
@@ -47,6 +47,7 @@ export class SidebarComponent implements AfterViewInit, OnInit {
 
   logout(){
     sessionStorage.clear();
+    localStorage.clear();
     this.router.navigate(['/login']);
   }
 

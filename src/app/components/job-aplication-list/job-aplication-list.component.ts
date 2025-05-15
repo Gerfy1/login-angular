@@ -10,18 +10,39 @@ import { MatDialog } from '@angular/material/dialog';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import { AddReminderDialogComponent } from '../add-reminder-dialog/add-reminder-dialog.component';
 
+export enum ApplicationStage {
+  INSCRITO = 'Inscrito',
+  ENTREVISTA = 'Entrevista',
+  TESTE_TECNICO = 'Teste Técnico',
+  TESTE_FIT = 'Teste de Fit/Comportamental',
+  TESTE_PRATICO = 'Teste Prático',
+  DINAMICA_GRUPO = 'Dinâmica de Grupo',
+  FEEDBACK = 'Feedback',
+}
+
+export enum ApplicationStatus{
+  EM_ANDAMENTO = 'Em Andamento',
+  PENDENTE = 'Pendente',
+  CONGELADO = 'Congelado',
+  REJEITADO = 'Rejeitado',
+  ACEITO = 'Aceito',
+}
+
 @Component({
   selector: 'app-job-aplication-list',
   imports: [CommonModule, ReactiveFormsModule, FormsModule],
   templateUrl: './job-aplication-list.component.html',
   styleUrl: './job-aplication-list.component.scss'
 })
+
 export class JobAplicationListComponent implements OnInit{
 
   jobApplications: JobApplication[] = [];
   filteredApplications: JobApplication[] = [];
   filterText: string = '';
 
+  ApplicationStatus = ApplicationStatus;
+  ApplicationStage = ApplicationStage;
 
   private subscription: Subscription | null = null;
   constructor(private jobApplicationService: JobApplicationService, private eventService: EventService, private dialog: MatDialog, private snackbar:MatSnackBar) {}
@@ -106,5 +127,32 @@ export class JobAplicationListComponent implements OnInit{
         });
       }
     });
+  }
+
+  getStatusBadgeClass(stauts: ApplicationStatus | string): string {
+    switch (stauts) {
+      case ApplicationStatus.PENDENTE:
+        return 'bg-warning text-dark';
+      case ApplicationStatus.EM_ANDAMENTO:
+        return 'bg-primary';
+      case ApplicationStatus.CONGELADO:
+        return 'bg-secondary';
+      case ApplicationStatus.REJEITADO:
+        return 'bg-danger';
+      case ApplicationStatus.ACEITO:
+        return 'bg-success';
+      default:
+        return 'bg-light text-dark';
+    }
+  }
+
+  formatJobLink (link: string): string {
+    if(!link){
+      return '#';
+    }
+    if (link.startsWith('https://') || link.startsWith('http://')) {
+      return link;
+    }
+    return 'https://' + link;
   }
 }

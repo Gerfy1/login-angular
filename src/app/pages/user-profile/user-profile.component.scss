@@ -1,0 +1,94 @@
+.profile-container {
+  max-width: 600px;
+  margin: 2rem auto;
+  padding: 2rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+}
+
+h2 {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  color: #333;
+}
+
+.profile-picture-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 1.5rem;
+
+  .profile-picture {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #ddd;
+    margin-bottom: 1rem;
+  }
+
+  .upload-button {
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    background-color: #e0e0e0;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 0.9rem;
+
+    &:hover {
+      background-color: #d5d5d5;
+    }
+  }
+}
+
+.profile-form {
+  .form-field {
+    margin-bottom: 1rem;
+
+    label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: bold;
+      color: #555;
+    }
+
+    input[type="text"],
+    textarea {
+      width: 100%;
+      padding: 0.75rem;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-sizing: border-box; // Para incluir padding/border na largura total
+      font-size: 1rem;
+    }
+
+    textarea {
+      resize: vertical; // Permite redimensionar verticalmente
+    }
+  }
+
+  .form-actions {
+    text-align: right;
+    margin-top: 1.5rem;
+
+    button {
+      padding: 0.75rem 1.5rem;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 1rem;
+
+      &:disabled {
+        background-color: #aaa;
+        cursor: not-allowed;
+      }
+
+      &:not(:disabled):hover {
+        background-color: #0056b3;
+      }
+    }
+  }
+}

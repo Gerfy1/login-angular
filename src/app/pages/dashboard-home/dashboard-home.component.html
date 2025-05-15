@@ -1,7 +1,7 @@
 <div class="dashboard-home container">
   <div class="row">
     <div class="col-12 mb-4">
-      <h2>Bem-vindo, {{ username }}!</h2>
+      <h2 class="bi bi-house-check"> Bem-vindo, {{ username }}!</h2>
       <p class="text-muted">Resumo da sua jornada de candidaturas</p>
     </div>
     <div class="row mb-4">
@@ -10,11 +10,12 @@
           <div class="card-body text-center">
             <h6 class="card-subtitle mb-2 text-muted">Total de Candidaturas</h6>
             <h2 class="mb-1">{{ totalApplications }}</h2>
-            <p *ngIf="applicationTrend > 0" class="text-success mb-0">
-              <i class="bi bi-arrow-up-right"></i> {{ applicationTrend }}% este mês
+            <p *ngIf="applicationTrend !== 0" [ngClass]="{'text-success': applicationTrend > 0, 'text-danger': applicationTrend < 0}" class="mb-0">
+              <i class="bi" [ngClass]="{'bi-arrow-up-right': applicationTrend > 0, 'bi-arrow-down-right': applicationTrend < 0}"></i>
+              {{ applicationTrend > 0 ? '+' : '' }}{{ applicationTrend }}% último mês 📊
             </p>
-            <p *ngIf="applicationTrend < 0" class="text-danger mb-0">
-              <i class="bi bi-arrow-down-right"></i> {{ applicationTrend }}% este mês
+            <p *ngIf="applicationTrend === 0" class="text-muted mb-0">
+              <i class="bi bi-dash-lg"></i> Sem alteração no último mês
             </p>
           </div>
         </div>
@@ -22,32 +23,31 @@
       <div class="col-md-3">
         <div class="card border-info h-100">
           <div class="card-body text-center">
-            <h6 class="card-subtitle mb-2 text-muted">Em Processo</h6>
-            <h2 class="mb-1">{{ activeApplications }}</h2>
-            <p class="mb-0">{{ responseRate }}% taxa de resposta</p>
+            <h6 class="card-subtitle mb-2 text-muted">Pipeline Ativo</h6>
+            <h2 class="mb-1">{{ activePipeLineCount }}</h2>
+            <p class="mb-0 text-muted">Candidaturas não finalizadas ⏳</p>
           </div>
         </div>
       </div>
       <div class="col-md-3">
         <div class="card border-warning h-100">
           <div class="card-body text-center">
-            <h6 class="card-subtitle mb-2 text-muted">Entrevistas</h6>
-            <h2 class="mb-1">{{ interviewCount }}</h2>
-            <p class="mb-0">{{ interviewRate }}% das candidaturas</p>
+            <h6 class="card-subtitle mb-2 text-muted">Taxa de Entrevista</h6>
+            <h2 class="mb-1">{{ interviewRate }}%</h2>
+            <p class="mb-0 text-muted">{{ interviewCount }} Chegaram à entrevista 🎉</p>
           </div>
         </div>
       </div>
       <div class="col-md-3">
         <div class="card border-success h-100">
           <div class="card-body text-center">
-            <h6 class="card-subtitle mb-2 text-muted">Ofertas</h6>
-            <h2 class="mb-1">{{ offerCount }}</h2>
-            <p class="mb-0">{{ offerRate }}% de conversão</p>
+            <h6 class="card-subtitle mb-2 text-muted">Taxa de Sucesso</h6>
+            <h2 class="mb-1">{{ sucessRate }}</h2>
+            <p class="mb-0">{{ acceptedCount }} Candidaturas aceitas 🏆</p>
           </div>
         </div>
       </div>
     </div>
-
     <div class="row mt-4">
       <div class="col-md-6 mb-4">
         <div class="card h-100">
@@ -58,7 +58,7 @@
           <div class="card-body p-0">
             <div *ngIf="latestApplications.length === 0" class="text-center p-4">
               <p class="text-muted">Nenhuma candidatura registrada</p>
-              <button routerLink="/dashboard/add-job" class="btn btn-primary btn-sm">
+              <button routerLink="/job-applications" class="btn btn-primary btn-sm">
                 <i class="bi bi-plus-circle me-1"></i>Adicionar Candidatura
               </button>
             </div>
@@ -68,14 +68,8 @@
                   <h6 class="mb-0">{{ app.jobName }}</h6>
                   <small class="text-muted">{{ app.date | date:'dd/MM/yyyy' }}</small>
                 </div>
-                <span class="badge" style="color: #000000;" [ngClass]="{
-                  'bg-warning': app.status === 'Pendente',
-                  'bg-info': app.status === 'Em andamento',
-                  'bg-success': app.status === 'Aceito',
-                  'bg-danger': app.status === 'Rejeitado',
-                  'bg-secondary': !['Pendente', 'Em andamento', 'Aceito', 'Rejeitado'].includes(app.status)
-                }">
-                  {{ app.status }}
+                <span class="badge" [ngClass]="getStatusBadgeClass(app.status)">
+                  {{ app.status  }}
                 </span>
               </li>
             </ul>
@@ -120,18 +114,19 @@
       <div class="col-md-4 mb-4">
         <div class="card h-100">
           <div class="card-header d-flex justify-content-between align-items-center">
-            <span>Próximos Eventos</span>
+            <span class="me-1">Próximos Eventos</span>
+
             <div>
-              <button (click)="addReminder()" class="btn btn-sm btn-primary me-2">
+              <button (click)="addReminder()" class="btn btn-sm btn-primary me-2 mb-1">
                 <i class="bi bi-calendar-plus me-1"></i>Adicionar
               </button>
-              <a [routerLink]="['/calendar']" class="btn btn-sm btn-outline-primary">Ver calendário</a>
+              <a [routerLink]="['/calendar']" class="btn btn-sm btn-outline-primary bi bi-calendar-week mb-1"> Calendário</a>
             </div>
           </div>
           <div class="card-body p-0">
             <div *ngIf="upcomingReminders.length === 0" class="text-center p-4">
               <p class="text-muted">Nenhum lembrete próximo</p>
-              <button (click)="addReminder()" class="btn btn-primary btn-sm">
+              <button (click)="addReminder()" class="btn btn-primary btn-sm mb-1">
                 <i class="bi bi-calendar-plus me-1"></i>Adicionar Lembrete
               </button>
             </div>
@@ -156,26 +151,19 @@
         </div>
       </div>
     </div>
-
-    <div class="row mt-2">
-      <div class="col-12">
-        <div class="card">
-          <div class="card-header d-flex justify-content-between align-items-center">
-            <span>Calendário</span>
-            <button class="btn btn-sm btn-outline-primary" [routerLink]="['/calendar']">Ver detalhes</button>
-          </div>
-          <div class="card-body small-calendar">
-            <mwl-calendar-month-view
-              [viewDate]="viewDate"
-              [events]="events"
-              [refresh]="refresh"
-              [activeDayIsOpen]="activeDayIsOpen"
-              (dayClicked)="dayClicked($event.day)"
-              (eventClicked)="handleEvent('Clicked', $event.event)">
-            </mwl-calendar-month-view>
+    <div class="col-md-6 mb-4">
+      <div class="card h-100">
+        <div class="card-header">
+          Distribuição por Etapas
+        </div>
+        <div class="card-body d-flex justify-content-center align-items-center">
+          <div style="width: 100%">
+            <canvas baseChart #stageChart
+              [data]="stageChartData"
+              [type]="'pie'"
+              [options]="stageChartOptions">
+            </canvas>
           </div>
         </div>
       </div>
     </div>
-  </div>
-</div>

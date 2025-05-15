@@ -9,46 +9,15 @@ import { switchMap } from 'rxjs/operators';
   providedIn: 'root'
 })
 export class ReminderCheckerService {
-  private checkedReminders = new Set<number>();
 
   constructor(
-    private reminderService: ReminderService,
-    private notificationService: NotificationService
   ) {}
 
   startChecking(): void {
-    interval(5 * 60 * 1000).pipe(
-      switchMap(() => this.reminderService.getReminders())
-    ).subscribe(reminders => {
-      this.checkReminders(reminders);
-    });
-
-    this.reminderService.getReminders().subscribe(reminders => {
-      this.checkReminders(reminders);
-    });
+   console.log('ReminderCheckerService: Verificação de lembretes no frontend desativada (Agora no backend).');
   }
 
-  private checkReminders(reminders: Reminder[]): void {
-    const now = new Date();
-    const thirtyMinutesFromNow = new Date(now.getTime() + 30 * 60 * 1000);
-
-    reminders.forEach(reminder => {
-      if (reminder && reminder.id !== undefined) {
-        const reminderDate = new Date(reminder.date);
-
-        if (reminderDate > now &&
-            reminderDate <= thirtyMinutesFromNow &&
-            !this.checkedReminders.has(reminder.id)) {
-
-          this.notificationService.addNotification(
-            `Lembrete em breve: "${reminder.title}" às ${reminderDate.toLocaleTimeString()}`,
-            'reminder',
-            reminder.id
-          );
-
-          this.checkedReminders.add(reminder.id);
-        }
-      }
-    });
+  checkReminders(reminders: Reminder): void {
+    console.log('ReminderCheckerService: Verificando lembretes no frontend desativada (agora no backend).');
   }
 }

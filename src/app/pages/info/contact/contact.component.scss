@@ -1,0 +1,74 @@
+@use "sass:math";
+
+$gradient-color-1: #743ad5;
+$gradient-color-2: #d53a9d;
+$border-thickness: 5px;
+$animation-speed: 4s;
+
+$glow-main-color: #ffffff;
+$glow-edge-color: #ffe5ff;
+$glow-width-degrees: 20deg;
+
+.list-group-item {
+  position: unset;
+  z-index: auto;
+  background: #fff;
+  overflow: hidden;
+}
+
+.animated-border-box {
+  width: 200px + ($border-thickness * 2);
+  height: 200px + ($border-thickness * 2);
+  padding: $border-thickness;
+  position: relative;
+  box-sizing: border-box;
+  border-radius: 0.25rem;
+  overflow: hidden;
+  margin: auto;
+
+  box-shadow: 0 0 7px rgba($glow-main-color, 0.6),
+              0 0 10px rgba($glow-edge-color, 0.5),
+              0 0 15px rgba($gradient-color-2, 0.4),
+              0 0 20px rgba($gradient-color-1, 0.3);
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 200%;
+    height: 200%;
+    background: conic-gradient(
+      $glow-main-color 0deg,
+      $glow-edge-color math.div($glow-width-degrees, 2),
+      $gradient-color-1 $glow-width-degrees,
+      $gradient-color-2 180deg,
+      $gradient-color-1 (360deg - $glow-width-degrees),
+      $glow-edge-color calc(360deg - #{math.div($glow-width-degrees, 2)}),
+      $glow-main-color 360deg
+    );
+    animation: spin-gradient $animation-speed linear infinite;
+    transform-origin: center center;
+    transform: translate(-50%, -50%);
+    z-index: 1;
+  }
+
+  img {
+    display: block;
+    width: 200px;
+    height: 200px;
+    object-fit: cover;
+    position: relative;
+    z-index: 2;
+    border-radius: 0.10rem;
+  }
+}
+
+@keyframes spin-gradient {
+  0% {
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+  100% {
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
+}

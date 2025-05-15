@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, registerLocaleData } from '@angular/common';
 import { CalendarModule, DateAdapter } from 'angular-calendar';
 import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
 import { CalendarEvent, CalendarView } from 'angular-calendar';
@@ -14,7 +14,13 @@ import { isSameDay,isSameMonth } from 'date-fns';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ReminderDetailsDialogComponent } from '../reminder-details-dialog/reminder-details-dialog.component';
 import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
-import { trigger, style, transition, animate } from '@angular/animations'; // Adicione esta linha
+import { trigger, style, transition, animate } from '@angular/animations';
+import localePt from '@angular/common/locales/pt';
+import { ptBR } from 'date-fns/locale';
+import { JobApplication } from '../../models/job-application.model';
+
+  registerLocaleData(localePt);
+
 
 @Component({
   selector: 'app-calendar',
@@ -43,11 +49,14 @@ export class CalendarComponent implements OnInit, OnDestroy{
   activeDayIsOpen: boolean = false;
   clickedDate: Date | null = null;
   refresh = new Subject<void>();
+  locale: string = 'pt-BR';
   private destroy$ = new Subject<void>();
 
   constructor(private reminderService: ReminderService, private dialog: MatDialog, private jobApplicationService: JobApplicationService, private snackBar: MatSnackBar) {}
 
   ngOnInit(): void {
+    this.reminderService.loadReminders();
+    this.subscribeToReminders();
     this.loadReminders();
   }
 
@@ -55,6 +64,17 @@ export class CalendarComponent implements OnInit, OnDestroy{
     this.destroy$.next();
     this.destroy$.complete();
   }
+
+  private subscribeToReminders(): void {
+    this.reminderService.getReminders()
+     .pipe(takeUntil(this.destroy$))
+     .subscribe(reminders => {
+       console.log('Reminders recebidos (Calendar):', reminders);
+       this.events = reminders.map(reminder => this.mapReminderToEvent(reminder));
+       console.log('Events mapeados para o calendário (Calendar):', this.events);
+       this.refresh.next();
+     });
+ }
 
   dayClicked({ date, events }: { date: Date; events: CalendarEvent[] }): void {
     if (isSameMonth(date, this.viewDate)) {
@@ -151,29 +171,24 @@ export class CalendarComponent implements OnInit, OnDestroy{
   }
 
   private mapReminderToEvent(reminder: Reminder): CalendarEvent {
-    let eventDate: Date;
-    if (Array.isArray(reminder.date)){
-      const [year, month, day, hour, minute] = reminder.date;
-      eventDate = new Date(year, month - 1, day, hour, minute);
-      console.log(`Reminder ${reminder.id}: Data como Array convertida para ${eventDate}`);
-    } else {
-      eventDate = new Date(reminder.date);
-      console.log(`Reminder ${reminder.id}: Data como Date convertida para ${eventDate}`);
+    if (!(reminder.date instanceof Date)) {
+      console.warn(`Reminder ${reminder.id}: reminder.date não é um objeto Date!`, reminder.date);
+      reminder.date = new Date(reminder.date);
+      if (isNaN(reminder.date.getTime())) {
+        console.error(`Falha ao converter data para o lembrete ID ${reminder.id}. Usando data atual como fallback.`);
+        reminder.date = new Date();
+      }
     }
     return {
       id: reminder.id,
       title: reminder.title,
-      start: eventDate,
+      start: reminder.date,
       allDay: false,
-      color: {
+      color: reminder.color ||{
         primary: '#1976d2',
         secondary: '#e3f2fd'
       },
-      meta: {
-        description: reminder.description,
-        jobApplicationId: reminder.jobApplicationId,
-        isCompleted: reminder.completed
-      }
+      meta: reminder
     };
   }
 
@@ -196,57 +211,50 @@ export class CalendarComponent implements OnInit, OnDestroy{
     });
   }
   editReminder(event: CalendarEvent): void {
-    const reminderId = event.id as number;
-    this.reminderService.getReminderById(reminderId).subscribe(reminder => {
-      if (!reminder.jobApplicationId) {
+    const reminderFromMeta = event.meta as Reminder;
+
+    if (!reminderFromMeta || reminderFromMeta.id === undefined) {
+      console.error("Não foi possível encontrar os dados do lembrete no evento do calendário:", event);
+      this.snackBar.open('Erro ao obter detalhes do lembrete.', 'OK', { duration: 3000 });
+      return;
+    }
+
+    this.jobApplicationService.getJobApplications().subscribe({
+      next: (allApplications) => {
+        let targetJobApplication: JobApplication | undefined = undefined;
+
+        const targetJobAppId = reminderFromMeta.jobApplication?.id || reminderFromMeta.jobApplicationId;
+        console.log("editReminder - targetJobAppId:", targetJobAppId);
+
+        if (targetJobAppId) {
+          targetJobApplication = allApplications.find(app => app.id === targetJobAppId);
+          if (!targetJobApplication) {
+             console.warn(`Candidatura com ID ${targetJobAppId} associada ao lembrete ${reminderFromMeta.id} não encontrada na lista.`);
+          }
+        } else {
+           console.warn(`Lembrete ${reminderFromMeta.id} não tem um ID de candidatura associado.`);
+        }
+
         const dialogRef = this.dialog.open(AddReminderDialogComponent, {
           width: '400px',
           data: {
-            reminder,
-            isEditing: true
+            reminder: reminderFromMeta,
+            jobApplication: targetJobApplication,
+            jobApplications: allApplications,
+            isEditing: true,
+            requireJobSelection: true
           }
         });
 
         dialogRef.afterClosed().subscribe(result => {
           if (result) {
-            this.loadReminders();
+            this.reminderService.loadReminders();
           }
         });
-      } else {
-        this.jobApplicationService.getJobApplication(reminder.jobApplicationId).subscribe({
-          next: (jobApplication) => {
-            const dialogRef = this.dialog.open(AddReminderDialogComponent, {
-              width: '400px',
-              data: {
-                jobApplication,
-                reminder,
-                isEditing: true
-              }
-            });
-
-            dialogRef.afterClosed().subscribe(result => {
-              if (result) {
-                this.loadReminders();
-              }
-            });
-          },
-          error: (error) => {
-            console.error('Erro ao buscar jobApplication:', error);
-            const dialogRef = this.dialog.open(AddReminderDialogComponent, {
-              width: '400px',
-              data: {
-                reminder,
-                isEditing: true
-              }
-            });
-
-            dialogRef.afterClosed().subscribe(result => {
-              if (result) {
-                this.loadReminders();
-              }
-            });
-          }
-        });
+      },
+      error: (error) => {
+        console.error('Erro ao carregar lista de candidaturas para edição do lembrete:', error);
+        this.snackBar.open('Erro ao carregar candidaturas. Não é possível editar o lembrete agora.', 'OK', { duration: 5000 });
       }
     });
   }

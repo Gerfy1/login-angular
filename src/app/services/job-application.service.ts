@@ -11,7 +11,7 @@ import { LoginService } from "./login.service";
 
 export class JobApplicationService {
 ;
-  private apiUrl = 'api/job-applications';
+  private apiUrl = '/api/job-applications';
 
 
   constructor(private http: HttpClient, private eventService: EventService, private loginService: LoginService){}

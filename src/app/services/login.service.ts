@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, Injector } from '@angular/core';
 import { LoginResponse } from '../types/login-response.type';
 import { tap } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
@@ -7,6 +7,9 @@ import { catchError } from 'rxjs/operators';
 import { throwError } from 'rxjs';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
+import { NotificationService } from './notification.service';
+import { ReminderService } from './reminder.service';
+
 
 interface TokenWithAccessToken {
   accessToken: string;
@@ -24,51 +27,35 @@ interface TokenWithJwt {
   providedIn: 'root'
 })
 export class LoginService {
-  private baseUrl = '/api/auth';
+  private baseUrl = '/api/job-applications';
   private tokenKey = 'auth-token';
   private userIdKey = 'user-id';
   private usernameKey = 'username';
 
-  constructor(private httpClient: HttpClient, private router: Router) { }
+  constructor(private httpClient: HttpClient, private router: Router, private injector: Injector) { }
 
-  login(username: string, password: string){
-    console.log('Tentando login com:', { username, password: '***' });
+  private get notificationService(): NotificationService{
+    return this.injector.get(NotificationService);
+  }
 
-    return this.httpClient.post<LoginResponse>(`${this.baseUrl}/login`, { username, password }).pipe(
-      tap((response) => {
-        console.log('Login response completa:', response);
+  private get reminderService(): ReminderService{
+    return this.injector.get(ReminderService);
+  }
 
-        if (response) {
-          if (typeof response === 'string') {
-            this.saveToken(response);
-          } else if ('token' in response) {
-            this.saveToken(response.token);
 
-            if ('userId' in response) {
-              this.saveUserId(response.userId);
-            }
-
-            if ('username' in response) {
-              this.saveUsername(response.username);
-            }
-          } else if ('accessToken' in response) {
-            this.saveToken((response as any).accessToken);
-          } else if ('jwt' in response) {
-            this.saveToken((response as any).jwt);
-          }
+  login(credentials: any): Observable<any> {
+    return this.httpClient.post<any>(`${this.baseUrl}/login`, credentials).pipe(
+      tap(response => {
+        if (response && response.token && response.userId && response.username) {
+          this.saveToken(response.token);
+          this.saveUserId(response.userId.toString());
+          this.saveUsername(response.username);
+        } else {
+          console.error('Resposta de login inválida:', response);
         }
       }),
-      catchError((error) => {
-        console.error('Detalhes completos do erro:', error);
-
-        if (error.error) {
-          if (typeof error.error === 'string') {
-            console.error('Erro retornado como string:', error.error);
-          } else {
-            console.error('Erro retornado como objeto:', error.error);
-          }
-        }
-
+      catchError(error => {
+        console.error('Erro no login:', error);
         return throwError(() => error);
       })
     );
@@ -111,6 +98,7 @@ export class LoginService {
     return !!this.getToken();
   }
 
+
   getUserData(): { userId: number | null, username: string | null, token: string | null } {
     return {
       userId: this.getUserId(),
@@ -120,12 +108,18 @@ export class LoginService {
   }
 
   logout(): void {
+    const userId = this.getUserId();
+    this.notificationService.clearLocalNotifications();
+    this.reminderService.clearRemindersOnLogout();
     localStorage.removeItem(this.tokenKey);
     localStorage.removeItem(this.userIdKey);
     localStorage.removeItem(this.usernameKey);
     sessionStorage.removeItem(this.tokenKey);
     sessionStorage.removeItem(this.userIdKey);
     sessionStorage.removeItem(this.usernameKey);
+    if (userId) {
+      localStorage.removeItem(`notifications_${userId}`);
+    }
     this.router.navigate(['/login']);
   }
 

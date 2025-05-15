@@ -1,20 +1,44 @@
-.card-header,
-.card-body {
-  position: relative;
+.card {
+  position: unset;
+  z-index: 1;
+  transform: none;
+}
+
+
+.card-header button,
+.card-header a,
+.card-body button,
+.card-body a {
+  position: unset;
+  z-index: 5;
+  gap: 5px;
+  pointer-events: auto;
 }
 
 a.btn,
 button.btn {
-  position: relative;
+  position: unset;
   z-index: 10;
   cursor: pointer !important;
 }
 
-.dashboard-home * {
-  pointer-events: auto;
+.chart {
+  display: flex;
+  width: 100%;
 }
 
-.chart {
-  display: block;
-  width: 100%;
+.chart-container {
+  z-index: 1;
+}
+
+.list-group {
+  position: unset;
+  z-index: 2;
+}
+
+.list-group-item {
+  position: unset;
+  z-index: auto;
+  background: #fff;
+  overflow: hidden;
 }

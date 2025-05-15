@@ -1,0 +1,29 @@
+<div class="profile-container">
+  <h2>Meu Perfil</h2>
+
+  <div class="profile-picture-section">
+    <img [src]="profilePictureUrl" alt="Foto do Perfil" class="profile-picture">
+    <input type="file" #fileInput hidden (change)="onFileSelected($event)" accept="image/png, image/jpeg">
+    <button (click)="fileInput.click()" class="upload-button">Alterar Foto</button>
+    <!-- Adicionar feedback de upload/erro aqui -->
+  </div>
+
+  <form [formGroup]="profileForm" (ngSubmit)="saveProfile()" class="profile-form">
+    <div class="form-field">
+      <label for="location">Localidade:</label>
+      <input id="location" type="text" formControlName="location" placeholder="Ex: São Paulo, Brasil">
+      <!-- Adicionar mensagens de erro de validação aqui -->
+    </div>
+
+    <div class="form-field">
+      <label for="bio">Biografia:</label>
+      <textarea id="bio" formControlName="bio" rows="4" placeholder="Fale um pouco sobre você..."></textarea>
+      <!-- Adicionar mensagens de erro de validação aqui -->
+    </div>
+
+    <div class="form-actions">
+      <button type="submit" [disabled]="profileForm.invalid || profileForm.pristine">Salvar Alterações</button>
+      <!-- Adicionar botão de cancelar/voltar se necessário -->
+    </div>
+  </form>
+</div>

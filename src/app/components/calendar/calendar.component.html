@@ -41,12 +41,13 @@
           Próximo
         </button>
       </div>
-      <h3>{{ viewDate | date:'MMMM y' }}</h3>
+      <h3>{{ viewDate | date:'MMMM y' : '' : 'pt-BR' }}</h3>
     </div>
 
     <div [ngSwitch]="view">
       <mwl-calendar-month-view
         *ngSwitchCase="CalendarView.Month"
+        [locale]="locale"
         [viewDate]="viewDate"
         [events]="events"
         [activeDayIsOpen]="activeDayIsOpen"
@@ -58,12 +59,14 @@
       </mwl-calendar-month-view>
       <mwl-calendar-week-view
         *ngSwitchCase="CalendarView.Week"
+        [locale]="locale"
         [viewDate]="viewDate"
         [events]="events"
         (eventClicked)="handleEventClick($event.event)">
       </mwl-calendar-week-view>
       <mwl-calendar-day-view
         *ngSwitchCase="CalendarView.Day"
+        [locale]="locale"
         [viewDate]="viewDate"
         [events]="events"
         (eventClicked)="handleEventClick($event.event)">

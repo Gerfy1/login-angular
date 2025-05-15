@@ -9,6 +9,7 @@ import { Observable } from 'rxjs';
 import { User } from '../../models/user.model';
 import { Reminder } from '../../models/reminder.model';
 import { ReminderService } from '../../services/reminder.service';
+import { ApplicationStage, ApplicationStatus } from '../job-aplication-list/job-aplication-list.component';
 
 
 @Component({
@@ -27,13 +28,14 @@ export class JobApplicationFormComponent implements OnInit {
       jobName: ['', Validators.required],
       jobDescription: ['', Validators.required],
       jobLink: ['', Validators.required],
-      stage: ['', Validators.required],
+      stage: ['Inscrito', Validators.required],
       status: ['Pendente', Validators.required],
       reminder: [''],
       reminderDescription: ['']
     })
   }
-
+  stages = Object.values(ApplicationStage);
+  statuses = Object.values(ApplicationStatus);
 
   ngOnInit(): void {
 

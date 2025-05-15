@@ -2,6 +2,6 @@ export interface ReminderCreate {
   title: string;
   description: string;
   date: string | Date;
-  completed: boolean;
+  //completed: boolean;
   jobApplicationId: number;
 }
