@@ -12,7 +12,7 @@ import { HttpClient, HttpHeaders } from "@angular/common/http";
 
 export class NotificationService {
 
-  private apiUrl = 'api/notifications';
+  private apiUrl = '/api/notifications';
 
   private notifications: Notification[] = [];
   private notificationSubject = new BehaviorSubject<Notification[]>([]);
