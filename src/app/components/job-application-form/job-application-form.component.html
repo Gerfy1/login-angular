@@ -30,6 +30,7 @@
     <label for="stage" class="form-label">Etapa</label>
     <select id="stage" class="form-select" formControlName="stage"
       [class.is-invalid]="jobApplicationForm.get('stage')?.invalid && (jobApplicationForm.get('stage')?.dirty || jobApplicationForm.get('stage')?.touched)">
+      <option value="" disabled selected>Selecione a etapa</option>
       <option *ngFor="let stage of stages" [value]="stage">{{ stage }}</option>
     </select>
     <div *ngIf="jobApplicationForm.get('stage')?.invalid && (jobApplicationForm.get('stage')?.dirty || jobApplicationForm.get('stage')?.touched)" class="invalid-feedback">
@@ -41,6 +42,7 @@
     <label for="status" class="form-label">Status</label>
     <select id="status" formControlName="status" class="form-select"
       [class.is-invalid]="jobApplicationForm.get('status')?.invalid && (jobApplicationForm.get('status')?.dirty || jobApplicationForm.get('status')?.touched)">
+      <option value="" disabled selected>Selecione o status</option>
       <option *ngFor="let status of statuses" [value]="status">{{ status }}</option>
     </select>
     <div *ngIf="jobApplicationForm.get('status')?.invalid && (jobApplicationForm.get('status')?.dirty || jobApplicationForm.get('status')?.touched)" class="invalid-feedback">
@@ -57,7 +59,7 @@
     <label for="reminderDescription" class="form-label">Descrição do Lembrete</label>
     <input type="text" id="reminderDescription" formControlName="reminderDescription" class="form-control" placeholder="Descrição do Lembrete">
     <label for="reminderDate" class="form-label">Data do Lembrete</label>
-    <input type="datetime-local" formControlName="reminder" class="form-control">
+    <input type="datetime-local" formControlName="reminderDate" class="form-control"> <!-- Use o campo correto -->
   </div>
 
   <button type="submit" class="btn btn-primary w-100">Registrar</button>

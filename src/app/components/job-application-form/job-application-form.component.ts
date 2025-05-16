@@ -21,6 +21,8 @@ import { ApplicationStage, ApplicationStatus } from '../job-aplication-list/job-
 export class JobApplicationFormComponent implements OnInit {
 
   jobApplicationForm: FormGroup;
+  stages = Object.values(ApplicationStage);
+  statuses = Object.values(ApplicationStatus);
 
 
   constructor(private fb: FormBuilder, private jobApplicationService: JobApplicationService, private reminderService: ReminderService) {
@@ -31,11 +33,11 @@ export class JobApplicationFormComponent implements OnInit {
       stage: ['Inscrito', Validators.required],
       status: ['Pendente', Validators.required],
       reminder: [''],
-      reminderDescription: ['']
+      reminderDescription: [''],
+      reminderDate: ['']
     })
   }
-  stages = Object.values(ApplicationStage);
-  statuses = Object.values(ApplicationStatus);
+
 
   ngOnInit(): void {
 
