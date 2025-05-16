@@ -1,6 +1,18 @@
-.card-header,
-.card-body {
-  position: relative;
+.card {
+  position: unset;
+  z-index: 1;
+  transform: none;
+}
+
+
+.card-header button,
+.card-header a,
+.card-body button,
+.card-body a {
+  position: unset;
+  z-index: 5;
+  gap: 5px;
+  pointer-events: auto;
 }
 
 a.btn,
