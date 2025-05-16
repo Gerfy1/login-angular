@@ -168,17 +168,18 @@ export class DashboardHomeComponent implements OnInit, AfterViewInit {
   }
 
   updateStatusChart(applications: any[]): void {
-    const pendingCount = applications.filter(app => app.status === 'Pendente').length;
-    const inProgressCount = applications.filter(app => app.status === 'Em andamento').length;
-    const frozenCount = applications.filter(app => app.status === 'Congelado').length;
-    const rejectedCount = applications.filter(app => app.status === 'Rejeitado').length;
+    const pendingCount = applications.filter(app => app.status === ApplicationStatus.PENDENTE).length;
+  const inProgressCount = applications.filter(app => app.status === ApplicationStatus.EM_ANDAMENTO).length;
+  const frozenCount = applications.filter(app => app.status === ApplicationStatus.CONGELADO).length;
+  const rejectedCount = applications.filter(app => app.status === ApplicationStatus.REJEITADO).length;
+  const acceptedCount = applications.filter(app => app.status === ApplicationStatus.ACEITO).length;
 
 
 
    this.statusChartData ={
     labels: ['Pendentes', 'Em Andamento', 'Congelados', 'Rejeitadas', 'Aceitas'],
     datasets: [{
-      data: [pendingCount, inProgressCount, frozenCount, rejectedCount, this.acceptedCount],
+      data: [pendingCount, inProgressCount, frozenCount, rejectedCount, acceptedCount],
       backgroundColor: ['#ffc107', '#17a2b8', '#6c757d', '#dc3545', '#198754'],
    }]
    };
