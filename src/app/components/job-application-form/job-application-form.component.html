@@ -1,11 +1,7 @@
 <form [formGroup]="jobApplicationForm" (ngSubmit)="onSubmit()" class="job-form">
   <div class="mb-3">
     <label for="jobName" class="form-label">Nome da Vaga</label>
-    <input type="text" id="jobName" class="form-control" formControlName="jobName" placeholder="Nome da Vaga"
-    [class.is-invalid]="jobApplicationForm.get('jobName')?.invalid && (jobApplicationForm.get('jobName')?.dirty || jobApplicationForm.get('jobName')?.touched)">
-    <div *ngIf="jobApplicationForm.get('jobName')?.invalid && (jobApplicationForm.get('jobName')?.dirty || jobApplicationForm.get('jobName')?.touched)" class="invalid-feedback">
-      Nome da vaga é obrigatório.
-    </div>
+    <input type="text" id="jobName" class="form-control" formControlName="jobName" placeholder="Nome da Vaga">
   </div>
   <div class="mb-3">
     <label for="jobDescription" class="form-label">Empresa</label>
