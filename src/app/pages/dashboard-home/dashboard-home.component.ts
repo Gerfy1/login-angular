@@ -179,7 +179,7 @@ export class DashboardHomeComponent implements OnInit, AfterViewInit {
     labels: ['Pendentes', 'Em Andamento', 'Congelados', 'Rejeitadas', 'Aceitas'],
     datasets: [{
       data: [pendingCount, inProgressCount, frozenCount, rejectedCount, this.acceptedCount],
-      backgroundColor: ['#ffc107', '#17a2b8', '#6c757d', '#dc35451', '#198754'],
+      backgroundColor: ['#ffc107', '#17a2b8', '#6c757d', '#dc3545', '#198754'],
    }]
    };
    console.log("StatusCharData atualizado (imutavelmente)")
