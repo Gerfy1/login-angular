@@ -1,36 +1,64 @@
 <form [formGroup]="jobApplicationForm" (ngSubmit)="onSubmit()" class="job-form">
   <div class="mb-3">
     <label for="jobName" class="form-label">Nome da Vaga</label>
-    <input type="text" id="jobName" class="form-control" formControlName="jobName" placeholder="Nome da Vaga">
+    <input type="text" id="jobName" class="form-control" formControlName="jobName" placeholder="Nome da Vaga"
+      [class.is-invalid]="jobApplicationForm.get('jobName')?.invalid && (jobApplicationForm.get('jobName')?.dirty || jobApplicationForm.get('jobName')?.touched)">
+    <div *ngIf="jobApplicationForm.get('jobName')?.invalid && (jobApplicationForm.get('jobName')?.dirty || jobApplicationForm.get('jobName')?.touched)" class="invalid-feedback">
+      Nome da vaga é obrigatório.
+    </div>
   </div>
+
   <div class="mb-3">
     <label for="jobDescription" class="form-label">Empresa</label>
-    <input type="text" id="jobDescription" class="form-control" formControlName="jobDescription" placeholder="Empresa ou a descrição da vaga">
+    <input type="text" id="jobDescription" class="form-control" formControlName="jobDescription" placeholder="Empresa ou a descrição da vaga"
+      [class.is-invalid]="jobApplicationForm.get('jobDescription')?.invalid && (jobApplicationForm.get('jobDescription')?.dirty || jobApplicationForm.get('jobDescription')?.touched)">
+    <div *ngIf="jobApplicationForm.get('jobDescription')?.invalid && (jobApplicationForm.get('jobDescription')?.dirty || jobApplicationForm.get('jobDescription')?.touched)" class="invalid-feedback">
+      A empresa é obrigatória.
+    </div>
   </div>
+
   <div class="mb-3">
-    <label for="jobLink" class="form-label"> Link da Vaga </label>
-    <input type="text" id="jobLink" class="form-control" formControlName="jobLink" placeholder="Link da Vaga">
+    <label for="jobLink" class="form-label">Link da Vaga</label>
+    <input type="text" id="jobLink" class="form-control" formControlName="jobLink" placeholder="Link da Vaga"
+      [class.is-invalid]="jobApplicationForm.get('jobLink')?.invalid && (jobApplicationForm.get('jobLink')?.dirty || jobApplicationForm.get('jobLink')?.touched)">
+    <div *ngIf="jobApplicationForm.get('jobLink')?.invalid && (jobApplicationForm.get('jobLink')?.dirty || jobApplicationForm.get('jobLink')?.touched)" class="invalid-feedback">
+      O link da vaga é obrigatório.
+    </div>
   </div>
+
   <div class="mb-3">
     <label for="stage" class="form-label">Etapa</label>
-    <select id="stage" class="form-select" formControlName="stage">
+    <select id="stage" class="form-select" formControlName="stage"
+      [class.is-invalid]="jobApplicationForm.get('stage')?.invalid && (jobApplicationForm.get('stage')?.dirty || jobApplicationForm.get('stage')?.touched)">
       <option *ngFor="let stage of stages" [value]="stage">{{ stage }}</option>
     </select>
+    <div *ngIf="jobApplicationForm.get('stage')?.invalid && (jobApplicationForm.get('stage')?.dirty || jobApplicationForm.get('stage')?.touched)" class="invalid-feedback">
+      A etapa é obrigatória.
+    </div>
   </div>
+
   <div class="mb-3">
     <label for="status" class="form-label">Status</label>
-    <select id="status" formControlName="status" class="form-select">
+    <select id="status" formControlName="status" class="form-select"
+      [class.is-invalid]="jobApplicationForm.get('status')?.invalid && (jobApplicationForm.get('status')?.dirty || jobApplicationForm.get('status')?.touched)">
       <option *ngFor="let status of statuses" [value]="status">{{ status }}</option>
     </select>
+    <div *ngIf="jobApplicationForm.get('status')?.invalid && (jobApplicationForm.get('status')?.dirty || jobApplicationForm.get('status')?.touched)" class="invalid-feedback">
+      O status é obrigatório.
+    </div>
   </div>
+
   <div class="mb-3 form-check">
     <input type="checkbox" id="reminder" formControlName="reminder" class="form-check-input">
     <label for="reminder" class="form-check-label">Adicionar Lembrete?</label>
   </div>
+
   <div class="mb-3" *ngIf="jobApplicationForm.get('reminder')?.value">
     <label for="reminderDescription" class="form-label">Descrição do Lembrete</label>
     <input type="text" id="reminderDescription" formControlName="reminderDescription" class="form-control" placeholder="Descrição do Lembrete">
     <label for="reminderDate" class="form-label">Data do Lembrete</label>
-    <input type="datetime-local" formControlName="reminder" class="form-control">  </div>
+    <input type="datetime-local" formControlName="reminder" class="form-control">
+  </div>
+
   <button type="submit" class="btn btn-primary w-100">Registrar</button>
 </form>
